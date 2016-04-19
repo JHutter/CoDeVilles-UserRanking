@@ -1,8 +1,16 @@
 package UserCreation;
 
 
-public class TestUserCreation {
+import javax.swing.*;
+
+public class TestUserCreation {public static void createAndShowGui() {
+    JFrame frame = new JFrame("User Account Setup");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.getContentPane().add(new UserAccountSetup().getRootPanel());
+    frame.pack();
+    frame.setVisible(true);
+}
     public static void main(String[] args) {
-        System.out.println("Hello, CoDeVilles");
+        javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui());
     }
 }
