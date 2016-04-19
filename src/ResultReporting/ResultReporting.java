@@ -8,7 +8,13 @@ import java.awt.*;
 import java.util.ArrayList;
 
 /**
- * Created by Legoman60 on 4/19/2016.
+ * This is the form class for result reporting.
+ * This form presents the results of tests to the user
+ * CIS 234A Dougherty
+ *
+ *  Programmer(s): Zack
+ *  Date: 4/19/2016.
+ *
  */
 public class ResultReporting {
     private JComboBox nameBox;
