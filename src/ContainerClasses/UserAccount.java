@@ -1,8 +1,12 @@
 package ContainerClasses;
+
 /**
- * Created by Zack on 4/13/2016.
- * This class models user accounts.
+ * This class models single user account.
  * CIS 234A Dougherty
+ *
+ *  Programmer(s): Zack
+ *  Date: 4/13/2016.
+ *
  */
 public class UserAccount {
     private int userID;
