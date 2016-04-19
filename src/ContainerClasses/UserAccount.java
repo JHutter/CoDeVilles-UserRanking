@@ -13,25 +13,25 @@ public class UserAccount {
     /**
      * @return userID The ID number of the user
      */
-    private int getUserID (){
+    public int getUserID (){
         return userID;
     }
     /**
      * @return email The email address of the user
      */
-    private String getEmail () {
+    public String getEmail () {
         return email;
     }
     /**
      * @return name The name of the user
      */
-    private String getName () {
+    public String getName () {
         return name;
     }
     /**
      * @return password The password for the user
      */
-    private String getPassword () {
+    public String getPassword () {
         return password;
     }
 
@@ -40,25 +40,25 @@ public class UserAccount {
     /**
      * @param newID The new ID number for the user
      */
-    private void setUserID (int newID) {
+    public void setUserID (int newID) {
         userID = newID;
     }
     /**
      * @param newEmail The new email address for the user
      */
-    private void setEmail (String newEmail){
+    public void setEmail (String newEmail){
         email = newEmail;
     }
     /**
      * @param newName The new name for the user
      */
-    private void setName (String newName){
+    public void setName (String newName){
         name = newName;
     }
     /**
      * @param newPassword The new password for the user
      */
-    private void setPassword (String newPassword){
+    public void setPassword (String newPassword){
         password = newPassword;
     }
 
