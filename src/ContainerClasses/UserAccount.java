@@ -74,14 +74,27 @@ public class UserAccount {
         password = "no password";
     }
     /**
-     * Constructor with parameters
-     * @param newID         The id number for the new user
+     * Constructor with all parameters
+     * @param newID         The id number for the new user (normally set by the database)
      * @param newEmail      The email address for the new user
      * @param newName       The name of the new user
      * @param newPassword   The password for the new user
      */
     public UserAccount (int newID, String newEmail, String newName, String newPassword) {
         userID = newID;
+        email = newEmail;
+        name = newName;
+        password = newPassword;
+    }
+    /**
+     * Constructor with 3 parameters
+     * The id number for the new user unneeded because it is normally set by the database
+     * @param newEmail      The email address for the new user
+     * @param newName       The name of the new user
+     * @param newPassword   The password for the new user
+     */
+    public UserAccount (String newEmail, String newName, String newPassword) {
+        userID = -1;
         email = newEmail;
         name = newName;
         password = newPassword;
