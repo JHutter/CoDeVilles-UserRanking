@@ -29,7 +29,7 @@ public class ResultReporting {
      */
     public ResultReporting() {
         //Set the size of the panel to necessary value
-        rootPanel.setPreferredSize(new Dimension(560, 375));
+        rootPanel.setPreferredSize(new Dimension(560, 325));
 
         //populate the test result list and user account list
         userAccounts = new ArrayList<>();
