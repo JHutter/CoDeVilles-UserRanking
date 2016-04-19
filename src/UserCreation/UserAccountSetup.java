@@ -1,12 +1,10 @@
 package UserCreation;
 
 import ContainerClasses.UserAccount;
-import ContainerClasses.TestResult;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 
 /**
@@ -29,8 +27,6 @@ public class UserAccountSetup {
     private JTextField emailField;
     private JButton cancelButton;
     private UserAccount account;
-    private ArrayList<UserAccount> userAccounts;
-
 
 
     /**

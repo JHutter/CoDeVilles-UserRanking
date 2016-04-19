@@ -1,7 +1,11 @@
 package ResultReporting;
 
+import ContainerClasses.TestResult;
+import ContainerClasses.UserAccount;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Created by Legoman60 on 4/19/2016.
@@ -11,6 +15,9 @@ public class ResultReporting {
     private JPanel rootPanel;
     private JButton finishButton;
     private JList resultList;
+
+    private ArrayList<UserAccount> userAccounts;
+    private ArrayList<TestResult> testResults;
 
     /**
      * Default Constructor
