@@ -25,17 +25,21 @@ public class UserAccountSetup {
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (nameField.getText().equals("")) {
-                    if (!passField1.getText().equals("") && passField1.getText().equals(passField2.getText())) {
-                        JOptionPane.showMessageDialog(rootPanel, "Attempting to create account for " + nameField.getText() + "\n email: " + account.getEmail() + "\n password: " + account.getPassword());
-                        account = new UserAccount(emailField.getText(), nameField.getText(), passField1.getText());
-                        //call database manager to validate unique email
-                        JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() + "\n email: " + account.getEmail() + "\n password: " + account.getPassword());
+                if (!emailField.getText().equals("")) {
+                    if (!nameField.getText().equals("")) {
+                        if (!passField1.getText().equals("") && passField1.getText().equals(passField2.getText())) {
+                            JOptionPane.showMessageDialog(rootPanel, "Attempting to create account for " + nameField.getText() + "\n email: " + emailField.getText() + "\n password: " + passField1.getText());
+                            account = new UserAccount(emailField.getText(), nameField.getText(), passField1.getText());
+                            //call database manager and attempt to insert account. If email is not unique then database will error.
+                            JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() + "\n email: " + account.getEmail() + "\n password: " + account.getPassword());
+                        } else {
+                            JOptionPane.showMessageDialog(rootPanel, "Invalid Password. Both passwords must be the same (and not blank).");
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(rootPanel, "Invalid Password. Both passwords must be the same (and not blank).");
+                        JOptionPane.showMessageDialog(rootPanel, "Name can not be blank.");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(rootPanel, "Name can not be blank.");
+                    JOptionPane.showMessageDialog(rootPanel, "Email can not be blank.");
                 }
             }
         });
