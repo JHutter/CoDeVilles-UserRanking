@@ -3,7 +3,7 @@ package UserCreation;
 import javax.swing.*;
 
 /**
- * This is the main class for driving the window creation.
+ * This is the main class for driving the window creation for user account setup.
  * CIS 234A Dougherty
  *
  *  Programmer(s): Zack

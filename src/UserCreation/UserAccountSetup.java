@@ -1,10 +1,12 @@
 package UserCreation;
 
 import ContainerClasses.UserAccount;
+import ContainerClasses.TestResult;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 /**
@@ -27,8 +29,13 @@ public class UserAccountSetup {
     private JTextField emailField;
     private JButton cancelButton;
     private UserAccount account;
+    private ArrayList<UserAccount> userAccounts;
 
 
+
+    /**
+     * Default Constructor
+     */
     public UserAccountSetup() {
         //Set the size of the panel to agreed value
         rootPanel.setPreferredSize(new Dimension(500,350));
@@ -66,5 +73,8 @@ public class UserAccountSetup {
         });
     }
 
+    /**
+     * @return rootPanel the root panel holding all other content
+     */
     public JPanel getRootPanel(){return rootPanel;}
 }
