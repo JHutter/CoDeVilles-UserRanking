@@ -3,6 +3,15 @@ package UserTest;
 
 import javax.swing.*;
 
+/**
+ * Description: Class to manage GUI for user taking test
+ *
+ * Programmer: JoAnne Hutter
+ * Date: 2016-04-19
+ *
+ * @author JHutter
+ * @version sprint1-part1
+ */
 public class TestUserTest {
     public static void main(String[] args) {
 

@@ -6,7 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by JHutter on 4/19/2016.
+ * Description: Form for user taking test story
+ *
+ * Programmer: JoAnne Hutter
+ * Date: 2016-04-19
+ *
+ * @author JHutter
+ * @version sprint1-part1
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
