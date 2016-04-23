@@ -1,6 +1,8 @@
 package SharedFunctions;
 
 import ContainerClasses.*;
+
+import javax.swing.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -29,4 +31,31 @@ public class DatabaseManager {
     private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT * FROM TESTSESSIONS";
     private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT * FROM TESTITEMS";
     private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT * FROM TESTRESULTS";
+
+    //begin database functions
+    public ArrayList<UserAccount> readAllUserAccounts(){
+        ArrayList<UserAccount> userAccounts = new ArrayList<UserAccount>();
+
+        try (
+            Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            PreparedStatement stmt = connection.prepareStatement(GET_ALL_USER_ACCOUNTS_SQL);
+            ResultSet rs = stmt.executeQuery();
+            ){
+            while (rs.next()){
+                userAccounts.add(
+                        new UserAccount(
+                        rs.getString("Email"),
+                        rs.getString("Name"),
+                        rs.getString("Pass")
+                ));
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Unable to connect to database");
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return userAccounts;
+    }
 }
