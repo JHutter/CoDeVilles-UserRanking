@@ -33,8 +33,8 @@ public class DatabaseManager {
     private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT * FROM TESTRESULTS";
 
     //begin database functions
-    public ArrayList<UserAccount> readAllUserAccounts(){
-        ArrayList<UserAccount> userAccounts = new ArrayList<UserAccount>();
+    public boolean readAllUserAccounts(ArrayList<UserAccount> userAccounts){
+        //ArrayList<UserAccount> userAccounts = new ArrayList<UserAccount>();
 
         try (
             Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -54,8 +54,9 @@ public class DatabaseManager {
             JOptionPane.showMessageDialog(null, "Unable to connect to database");
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
+            return false;
         }
 
-        return userAccounts;
+        return true;
     }
 }
