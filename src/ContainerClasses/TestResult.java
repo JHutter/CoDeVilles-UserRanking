@@ -3,10 +3,10 @@ package ContainerClasses;
 /**
  * This class models single result.
  * CIS 234A Dougherty
+ * Creation Date: 4/19/2016.
  *
- *  Programmer(s): Zack
- *  Date: 4/19/2016.
- *
+ *  @author Zack
+ *  @version 2016.4.22
  */
 public class TestResult {
     private int resultID, questionNumber, itemID, sessionID, result;

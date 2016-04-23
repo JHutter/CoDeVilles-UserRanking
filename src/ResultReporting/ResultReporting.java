@@ -2,6 +2,7 @@ package ResultReporting;
 
 import ContainerClasses.TestResult;
 import ContainerClasses.UserAccount;
+import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,7 @@ public class ResultReporting {
     private JTextArea resultList;
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestResult> testResults;
+    private DatabaseManager databaseManager;
 
     /**
      * Default Constructor
@@ -30,6 +32,8 @@ public class ResultReporting {
     public ResultReporting() {
         //Set the size of the panel to necessary value
         rootPanel.setPreferredSize(new Dimension(560, 325));
+        //instance the database manager
+        databaseManager = new DatabaseManager();
 
         //populate the test result list and user account list
         userAccounts = new ArrayList<>();
@@ -51,9 +55,10 @@ public class ResultReporting {
      * fills the user account array list with data
      */
     public void getUserAccounts(){
-        //populate with test values for now
-        userAccounts.add(new UserAccount(1, "lol@lol.com", "Zack", "pass"));
-        userAccounts.add(new UserAccount(2, "lol2@lol2.com", "Zack2", "pass2"));
+        //populate with values from the database
+         if(!databaseManager.readAllUserAccounts(userAccounts)){
+             //close the window due to read failure
+         }
     }
 
     /**
