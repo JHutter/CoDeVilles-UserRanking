@@ -32,6 +32,7 @@ public class ResultReporting {
     public ResultReporting() {
         //Set the size of the panel to necessary value
         rootPanel.setPreferredSize(new Dimension(560, 325));
+        //instance the database manager
         databaseManager = new DatabaseManager();
 
         //populate the test result list and user account list
@@ -56,7 +57,7 @@ public class ResultReporting {
     public void getUserAccounts(){
         //populate with values from the database
          if(!databaseManager.readAllUserAccounts(userAccounts)){
-             //close the window
+             //close the window due to read failure
          }
     }
 
