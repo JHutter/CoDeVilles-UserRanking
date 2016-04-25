@@ -50,6 +50,7 @@ public class DatabaseManager {
             while (rs.next()){ //if the connection was successful, read the result set and put into array list
                 userAccounts.add(
                         new UserAccount(
+                        rs.getInt("UserID"),
                         rs.getString("Email"),
                         rs.getString("Name"),
                         rs.getString("Pass")

@@ -2,10 +2,13 @@ package ResultReporting;
 
 import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
+import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 import SharedFunctions.DatabaseManager;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +27,7 @@ public class ResultReporting {
     private JTextArea resultList;
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestItem> testItems;
+    private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
     private DatabaseManager databaseManager;
 
@@ -36,17 +40,26 @@ public class ResultReporting {
         //instance the database manager
         databaseManager = new DatabaseManager();
 
-        //populate the test result list, test item list, and user account list
-        userAccounts = new ArrayList<>();
-        getUserAccounts();
+        //populate the test result list, test item list, test session list, and user account list
         testItems = new ArrayList<>();
         getTestItems();
+        testSessions = new ArrayList<>();
+        getTestSessions();
         testResults = new ArrayList<>();
         getTestResults();
+        userAccounts = new ArrayList<>();
+        getUserAccounts();
 
         //fill the text fields
         fillNameBox();
         fillResultsBox();
+
+        nameBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fillResultsBox();
+            }
+        });
     }
 
     /**
@@ -55,21 +68,21 @@ public class ResultReporting {
     public JPanel getRootPanel(){return rootPanel;}
 
     /**
-     * fills the user account array list with data
-     */
-    public void getUserAccounts(){
-        //populate with values from the database
-         if(!databaseManager.readAllUserAccounts(userAccounts)){
-             //close the window due to read failure
-         }
-    }
-
-    /**
-     * fills the user account array list with data
+     * fills the test item array list with data
      */
     public void getTestItems(){
         //populate with values from the database
         if(!databaseManager.readAllTestItems(testItems)){
+            //close the window due to read failure
+        }
+    }
+
+    /**
+     * fills the test session array list with data
+     */
+    public void getTestSessions(){
+        //populate with values from the database
+        if(!databaseManager.readAllTestSessions(testSessions)){
             //close the window due to read failure
         }
     }
@@ -80,6 +93,16 @@ public class ResultReporting {
     public void getTestResults(){
         //populate with values from the database
         if(!databaseManager.readAllTestResults(testResults)){
+            //close the window due to read failure
+        }
+    }
+
+    /**
+     * fills the user account array list with data
+     */
+    public void getUserAccounts(){
+        //populate with values from the database
+        if(!databaseManager.readAllUserAccounts(userAccounts)){
             //close the window due to read failure
         }
     }
@@ -105,22 +128,28 @@ public class ResultReporting {
         resultList.setText("");
         resultList.append("Item \t Win \t Loss \t Tie \n");
 
-        for(TestItem testItem : testItems){
-
-            //parse results
-            for(TestResult testResult : testResults){
-                //if the test item and the test result have the same item id, then count the result
-                if(testItem.getItemID()== testResult.getItemID()) {
-                    switch (testResult.getResult()) {
-                        case 1:
-                            win++;
-                            break;
-                        case 0:
-                            tie++;
-                            break;
-                        case -1:
-                            loss++;
-                            break;
+        //for each item print results
+        for (TestItem testItem : testItems) {
+            //for each test session check user id
+            for(TestSession testSession: testSessions) {
+                //if the session belongs to the user selected, then continue
+                if (testSession.getUserID() == userAccounts.get(nameBox.getSelectedIndex()).getUserID()){
+                    //parse each object in the results list for data
+                    for (TestResult testResult : testResults) {
+                        //if the result belongs to the session in the current iteration, and the result is for the item in the current iteration, then count the result
+                        if (testItem.getItemID() == testResult.getItemID() && testSession.getSessionID() == testResult.getSessionID()) {
+                            switch (testResult.getResult()) {
+                                case 1:
+                                    win++;
+                                    break;
+                                case 0:
+                                    tie++;
+                                    break;
+                                case -1:
+                                    loss++;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
