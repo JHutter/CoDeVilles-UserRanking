@@ -12,9 +12,10 @@ import java.awt.event.ActionListener;
  * This form gathers information for anew user account before sending it off to a database
  * The database automatically checks to ensure that an e-mail address is unique
  * CIS 234A Dougherty
+ * Date Created: 4/19/2016
  *
- *  Programmer(s): Zack
- *  Date: 4/19/2016.
+ *  @author  Zack
+ *  @version  2016.4.24
  *
  */
 

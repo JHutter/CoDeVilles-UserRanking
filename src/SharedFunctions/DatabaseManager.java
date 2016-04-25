@@ -64,4 +64,128 @@ public class DatabaseManager {
 
         return true; //return true for success
     }
+    /**
+     * Reads all tests from the database and informs caller of success with return boolean
+     * @param tests An ArrayList of Test to populate with data from the database
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public boolean readAllTests(ArrayList<Test> tests){
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_ALL_TESTS_SQL);
+              ResultSet rs = stmt.executeQuery();
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                tests.add(
+                        new Test(
+                                rs.getInt("TestID"),
+                                rs.getString("TestName")
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
+    /**
+     * Reads all test sessions from the database and informs caller of success with return boolean
+     * @param testSessions An ArrayList of TestSession to populate with data from the database
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public boolean readAllTestSessions(ArrayList<TestSession> testSessions){
+        boolean isSessionActive;
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_ALL_TEST_SESSIONS_SQL);
+              ResultSet rs = stmt.executeQuery();
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                if(rs.getInt("isActive") == 1){
+                    isSessionActive = true;
+                } else {
+                    isSessionActive = false;
+                }
+                testSessions.add(
+                        new TestSession(
+                                rs.getInt("SessionID"),
+                                rs.getInt("TestID"),
+                                rs.getInt("UserID"),
+                                isSessionActive
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
+    /**
+     * Reads all test items from the database and informs caller of success with return boolean
+     * @param testItems An ArrayList of TestItem to populate with data from the database
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public boolean readAllTestItems(ArrayList<TestItem> testItems){
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_ALL_TEST_ITEMS_SQL);
+              ResultSet rs = stmt.executeQuery();
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                testItems.add(
+                        new TestItem(
+                                rs.getInt("ItemID"),
+                                rs.getInt("TestID"),
+                                rs.getString("itemText")
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
+    /**
+     * Reads all test results from the database and informs caller of success with return boolean
+     * @param testResults An ArrayList of TestResult to populate with data from the database
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public boolean readAllTestResults(ArrayList<TestResult> testResults){
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_ALL_TEST_RESULTS_SQL);
+              ResultSet rs = stmt.executeQuery();
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                testResults.add(
+                        new TestResult(
+                                rs.getInt("ResultID"),
+                                rs.getInt("QuestionNumber"),
+                                rs.getInt("ItemID"),
+                                rs.getInt("SessionID"),
+                                rs.getInt("Result")
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
 }
