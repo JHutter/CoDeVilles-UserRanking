@@ -75,6 +75,14 @@ public class UserAccountSetup {
                 }
             }
         });
+
+        //on click listener for cancel button
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);//exit on cancel
+            }
+        });
     }
 
     /**
