@@ -1,6 +1,7 @@
 package UserCreation;
 
 import ContainerClasses.UserAccount;
+import SharedFunctions.DatabaseManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,6 +29,7 @@ public class UserAccountSetup {
     private JTextField emailField;
     private JButton cancelButton;
     private UserAccount account;
+    private DatabaseManager databaseManager;
 
 
     /**
@@ -36,6 +38,9 @@ public class UserAccountSetup {
     public UserAccountSetup() {
         //Set the size of the panel to agreed value
         rootPanel.setPreferredSize(new Dimension(500,350));
+
+        //instance the database manager
+        databaseManager = new DatabaseManager();
 
         //on click listener for finish button
         finishButton.addActionListener(new ActionListener() {
@@ -53,7 +58,9 @@ public class UserAccountSetup {
                             account = new UserAccount(emailField.getText(), nameField.getText(), passField1.getText());
 
                             //call database manager and attempt to insert account. If email is not unique then database will error.
-                            JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() + "\n email: " + account.getEmail() + "\n password: " + account.getPassword());
+                            if (databaseManager.insertUserAccount(account)){
+                                JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() + "\n email: " + account.getEmail() + "\n password: " + account.getPassword());
+                            }
                         } else {
                             //show message on invalid password
                             JOptionPane.showMessageDialog(rootPanel, "Invalid Password. Both passwords must be the same (and not blank).");

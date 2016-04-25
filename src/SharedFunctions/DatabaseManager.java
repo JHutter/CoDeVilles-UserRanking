@@ -203,10 +203,10 @@ public class DatabaseManager {
             stmt.setString(1, account.getEmail());
             stmt.setString(2, account.getName());
             stmt.setString(3, account.getPassword());
-            stmt.executeQuery();
+            stmt.executeUpdate();
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to add account to database"); //generates pop-up box
+            JOptionPane.showMessageDialog(null, "Unable to add account to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
