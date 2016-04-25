@@ -32,6 +32,7 @@ public class DatabaseManager {
     private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT * FROM TESTSESSIONS";
     private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT * FROM TESTITEMS";
     private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT * FROM TESTRESULTS";
+    private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
 
 
     //begin database functions
@@ -181,6 +182,31 @@ public class DatabaseManager {
 
         } catch (SQLException e) { //if the connection fails, show error
             JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
+    /**
+     * Adds the supplied user account to the database and informs caller of success with return boolean
+     * @param account A user account that will be added to the database
+     * @return true/false Whether the connection and write failed or succeeded.
+     */
+    public boolean insertUserAccount(UserAccount account){
+        try (//try to create a database connection
+            Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+            PreparedStatement stmt = connection.prepareStatement(INSERT_NEW_USER_ACCOUNT_SQL);
+        ){
+
+            stmt.setString(1, account.getEmail());
+            stmt.setString(2, account.getName());
+            stmt.setString(3, account.getPassword());
+            stmt.executeQuery();
+
+        } catch (SQLException e) { //if the connection fails, show error
+            JOptionPane.showMessageDialog(null, "Unable to connect to add account to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
