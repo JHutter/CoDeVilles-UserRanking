@@ -65,17 +65,17 @@ public class ResultReporting {
      * fills the test result array list with data
      */
     public void getTestResults(){
-        //populate with test values for now
-        testResults.add(new TestResult(1, 1, 1, 1, 1));
-        testResults.add(new TestResult(2, 2, 2, 2, 2));
+        if(!databaseManager.readAllTestResults(testResults)){
+            //close the window due to read failure
+        }
     }
 
     /**
-     * populates the name box with the usernames in the user account array list
+     * populates the name box with the emails in the user account array list
      */
     public void fillNameBox(){
         for(UserAccount userAccount : userAccounts) {
-            nameBox.addItem(userAccount.getName());
+            nameBox.addItem(userAccount.getEmail());
         }
     }
 
