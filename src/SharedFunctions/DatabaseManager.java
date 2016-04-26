@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Creation Date: 4/22/2016.
  *
- *  @author Zack and Jinsook Lee
+ *  @author Zack and Jinsook
  *  @version 2016.4.25
  */
 public class DatabaseManager {
@@ -233,7 +233,7 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
         catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            JOptionPane.showMessageDialog(null, "Unable to add item to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false;
@@ -257,7 +257,7 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
         catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
+            JOptionPane.showMessageDialog(null, "Unable to delete item from database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false;
