@@ -17,7 +17,7 @@ import java.lang.String;
  * Create Date 4/18/2016
  *
  * @author   Jinsook Lee
- * @version  4/24/2016
+ * @version  4/25/2016
  */
 
 public class AdminSetupForm {
@@ -125,10 +125,11 @@ public class AdminSetupForm {
     }
 
     /**
-     * Finish button shows message and redirect to menu page
+     * Finish button shows message and close GUI
      */
     public void finishItem(){
         JOptionPane.showMessageDialog(rootPanel, "Finished.");
+        System.exit(0);
     }
 
     /**
@@ -145,6 +146,7 @@ public class AdminSetupForm {
      * Check weather test is taken or not. After any user takes test, item can not be changed
      */
     public void ckeckTakenTest(){
+    //will be updated later
         takenLabel.setVisible(false);
         if (isTestTaken)
         {
