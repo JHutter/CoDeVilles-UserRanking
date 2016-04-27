@@ -13,6 +13,7 @@ import javax.swing.*;
  * @version sprint1-part1
  */
 public class TestUserTest {
+    /* TODO use session (having user + test) instead of test itself */
     public static void main(String[] args) {
 
         javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui());
@@ -25,4 +26,5 @@ public class TestUserTest {
         frame.pack();
         frame.setVisible(true);
     }
+
 }
