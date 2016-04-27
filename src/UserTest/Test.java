@@ -2,6 +2,7 @@ package UserTest;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by JHutter on 4/26/2016.
@@ -24,7 +25,17 @@ public class Test {
     }
 
     private ArrayList<ItemPair> generateItemPairs(ArrayList<String> items) {
-        return new ArrayList<ItemPair>();
+        ArrayList<ItemPair> generatedPairs = new ArrayList<ItemPair>();
+        for (int outer = 0; outer < itemCount-1; outer++) {
+            String outerItem = items.get(outer);
+            for (int inner = outer+1; inner < itemCount; inner++) {
+                String innerItem = items.get(inner);
+                ItemPair currentPair = new ItemPair(outerItem, innerItem);
+                generatedPairs.add(currentPair);
+            }
+        }
+        Collections.shuffle(generatedPairs);
+        return generatedPairs;
     }
 
 
