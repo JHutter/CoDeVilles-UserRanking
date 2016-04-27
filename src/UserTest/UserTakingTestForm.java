@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * Date: 2016-04-19
  *
  * @author JHutter
- * @version sprint1-part1
+ * @version 2016-04-27
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
@@ -25,9 +25,12 @@ public class UserTakingTestForm {
 
     public UserTakingTestForm() {
         rootPanel.setPreferredSize(new Dimension(500,350));
+        itemAButton.setText(test.getPairs().get(0).getItem1());
+        itemBButton.setText(test.getPairs().get(0).getItem2());
         itemAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(itemAButton, itemBButton, noItemButton);
                 setSelectedItem(itemAButton);
             }
@@ -35,6 +38,7 @@ public class UserTakingTestForm {
         itemBButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(itemBButton, itemAButton, noItemButton);
                 setSelectedItem(itemBButton);
             }
@@ -42,6 +46,7 @@ public class UserTakingTestForm {
         noItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(noItemButton, itemBButton, itemAButton);
                 setSelectedItem(noItemButton);
             }
@@ -50,6 +55,7 @@ public class UserTakingTestForm {
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 if (selectedItem != null) { /* don't increment turn if an option isn't selected*/
                     if (test.getCurrentTurn() < test.getTotalTurn()-1) {
                         test.incrementTurn();
