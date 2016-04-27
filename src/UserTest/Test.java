@@ -24,6 +24,7 @@ public class Test {
         itemTotal = items.size();
         pairs = generateItemPairs(items);
         turnTotal = pairs.size();
+        /* TODO add field (collection of some sort) for recording scores */
     }
 
     private ArrayList<ItemPair> generateItemPairs(ArrayList<String> items) {
@@ -55,5 +56,11 @@ public class Test {
     }
     public int getTotalTurn() {
         return turnTotal;
+    }
+    public ItemPair getNextPair(int turn){
+        if (turn <= turnTotal) {
+            return pairs.get(turn);
+        }
+        return pairs.get(turnTotal);
     }
 }

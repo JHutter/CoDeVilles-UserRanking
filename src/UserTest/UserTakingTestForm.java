@@ -50,10 +50,21 @@ public class UserTakingTestForm {
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                test.incrementTurn();
-                if (test.getCurrentTurn() == test.getTotalTurn()) {
-                    finishButton.setText("Finish");
+                if (selectedItem != null) { /* don't increment turn if an option isn't selected*/
+                    if (test.getCurrentTurn() < test.getTotalTurn()-1) {
+                        test.incrementTurn();
+                        selectedItem = null;
+                        setNewItemPairs(test.getCurrentTurn());
+                    }
+                    else {
+                        if (test.getCurrentTurn() == test.getTotalTurn()) {
+                            finishButton.setText("Finish");
+                        }
+                    }
+                    resetItemButtonColors(itemAButton, itemBButton, noItemButton);
+
                 }
+                /* TODO remove this */
                 System.out.print("You clicked Next/Finish!\nTurn: " + test.getCurrentTurn() + "\n");
             }
         });
@@ -71,6 +82,18 @@ public class UserTakingTestForm {
     }
     private void setSelectedItem(JButton button) {
         selectedItem = button;
+    }
+
+    private void setNewItemPairs(int nextTurn) {
+        ItemPair nextPair = test.getNextPair(nextTurn);
+        itemAButton.setText(nextPair.getItem1());
+        itemBButton.setText(nextPair.getItem2());
+    }
+
+    private void resetItemButtonColors(JButton button1, JButton button2, JButton button3) {
+        button1.setBackground(new Color(232,232,232));
+        button2.setBackground(new Color(232,232,232));
+        button3.setBackground(new Color(232,232,232));
     }
 }
 
