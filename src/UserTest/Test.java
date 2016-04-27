@@ -48,7 +48,9 @@ public class Test {
     }
 
     public void incrementTurn() {
-        currentTurn++;
+        if (currentTurn < turnTotal) {
+            currentTurn++;
+        }
     }
 
     public int getCurrentTurn() {
@@ -62,5 +64,9 @@ public class Test {
             return pairs.get(turn);
         }
         return pairs.get(turnTotal);
+    }
+
+    public ArrayList<ItemPair> getPairs() {
+        return pairs;
     }
 }
