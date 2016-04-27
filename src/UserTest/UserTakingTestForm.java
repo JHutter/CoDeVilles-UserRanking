@@ -21,7 +21,6 @@ public class UserTakingTestForm {
     private JButton noItemButton;
     private JButton nextButton;
     private JButton finishButton;
-    private JTextArea userInstructions;
 
     public UserTakingTestForm() {
         rootPanel.setPreferredSize(new Dimension(500,350));
@@ -43,12 +42,7 @@ public class UserTakingTestForm {
                 System.out.print("You clicked \"Can't Decide\"!\n");
             }
         });
-        nextButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.print("You clicked Next!\n");
-            }
-        });
+
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
