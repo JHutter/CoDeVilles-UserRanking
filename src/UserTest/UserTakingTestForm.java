@@ -30,6 +30,7 @@ public class UserTakingTestForm {
         itemAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(itemAButton, itemBButton, noItemButton);
                 setSelectedItem(itemAButton);
             }
@@ -37,6 +38,7 @@ public class UserTakingTestForm {
         itemBButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(itemBButton, itemAButton, noItemButton);
                 setSelectedItem(itemBButton);
             }
@@ -44,6 +46,7 @@ public class UserTakingTestForm {
         noItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 toggleItemButtonColor(noItemButton, itemBButton, itemAButton);
                 setSelectedItem(noItemButton);
             }
@@ -52,6 +55,7 @@ public class UserTakingTestForm {
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                /* TODO refactor this */
                 if (selectedItem != null) { /* don't increment turn if an option isn't selected*/
                     if (test.getCurrentTurn() < test.getTotalTurn()-1) {
                         test.incrementTurn();
