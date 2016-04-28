@@ -37,7 +37,7 @@ public class ResultReporting {
      */
     public ResultReporting() {
         //Set the size of the panel to necessary value
-        rootPanel.setPreferredSize(new Dimension(560, 325));
+        rootPanel.setPreferredSize(new Dimension(500, 350));
         //instance the database manager
         databaseManager = new DatabaseManager();
 
