@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * This class allows a java class to be run as a separate process by supplying a class containing main(String args[]){} as a parameter
+ * This class allows a java class to be run as a separate process by supplying a class containing the main() function as a parameter
  *
  * Credit to the user hallidave of stackoverflow.com for this code
  * http://stackoverflow.com/questions/636367/executing-a-java-application-in-a-separate-process/723914#723914
