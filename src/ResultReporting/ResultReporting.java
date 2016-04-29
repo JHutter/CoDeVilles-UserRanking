@@ -121,7 +121,7 @@ public class ResultReporting {
      */
     public void getUserAccounts(){
         //populate with values from the database
-        if(!databaseManager.readAllUserAccounts(userAccounts)){
+        if(!databaseManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read user accounts from database. Please check your internet connection and try again.");
             System.exit(-4);

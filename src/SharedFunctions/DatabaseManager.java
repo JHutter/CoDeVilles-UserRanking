@@ -21,6 +21,7 @@ import java.util.ArrayList;
  *  2016.4.29:
  *      Refactored SQL statements to not use SELECT * FROM
  *      Removed pop-ups from function call failures
+ *      Added function to get user accounts that have results associated with them.
  */
 public class DatabaseManager {
     //begin database information strings
@@ -36,6 +37,11 @@ public class DatabaseManager {
     private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS";
     private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT ItemID, ItemText, TestID FROM TESTITEMS";
     private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT ResultID, QuestionNumber, ItemID, SessionID, Result FROM TESTRESULTS";
+    private static final String GET_USERS_HAVING_RESULTS_SQL = "SELECT UserID, Email, Name, Pass FROM USERACCOUNTS " +
+                                                                "WHERE EXISTS (SELECT UserID FROM TESTSESSIONS " +
+                                                                "WHERE USERACCOUNTS.UserID = TESTSESSIONS.UserID " +
+                                                                "AND EXISTS (SELECT SessionID FROM TESTRESULTS " +
+                                                                "WHERE TESTSESSIONS.SessionID = TESTRESULTS.SessionID))";
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
@@ -180,6 +186,37 @@ public class DatabaseManager {
                                 rs.getInt("ItemID"),
                                 rs.getInt("SessionID"),
                                 rs.getInt("Result")
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return false; //return false due to connection failure
+        }
+
+        return true; //return true for success
+    }
+    /**
+     * Reads user accounts from the database for users associated with a test session having associated test results
+     * e.g. does not read a user that has not answered a test question
+     * and informs caller of success with return boolean
+     * @param userAccounts An ArrayList of UserAccount to populate with data from the database
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public boolean readUsersHavingResults(ArrayList<UserAccount> userAccounts){
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_USERS_HAVING_RESULTS_SQL);
+              ResultSet rs = stmt.executeQuery()
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                userAccounts.add(
+                        new UserAccount(
+                                rs.getInt("UserID"),
+                                rs.getString("Email"),
+                                rs.getString("Name"),
+                                rs.getString("Pass")
                         ));
             }
 
