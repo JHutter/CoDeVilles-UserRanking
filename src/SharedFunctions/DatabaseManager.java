@@ -27,11 +27,11 @@ public class DatabaseManager {
 
 
     //being sql strings
-    private static final String GET_ALL_USER_ACCOUNTS_SQL = "SELECT * FROM USERACCOUNTS";
-    private static final String GET_ALL_TESTS_SQL = "SELECT * FROM TESTS";
-    private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT * FROM TESTSESSIONS";
-    private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT * FROM TESTITEMS";
-    private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT * FROM TESTRESULTS";
+    private static final String GET_ALL_USER_ACCOUNTS_SQL = "SELECT UserID, Email, Name, Pass FROM USERACCOUNTS";
+    private static final String GET_ALL_TESTS_SQL = "SELECT TestID, TestName FROM TESTS";
+    private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS";
+    private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT ItemID, ItemText, TestID FROM TESTITEMS";
+    private static final String GET_ALL_TEST_RESULTS_SQL = "SELECT ResultID, QuestionNumber, ItemID, SessionID, Result FROM TESTRESULTS";
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
@@ -60,7 +60,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -88,7 +87,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -124,7 +122,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -153,7 +150,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -184,7 +180,6 @@ public class DatabaseManager {
             }
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to connect to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -209,7 +204,6 @@ public class DatabaseManager {
             stmt.executeUpdate();
 
         } catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to add account to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false; //return false due to connection failure
@@ -233,7 +227,6 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
         catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to add item to database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false;
@@ -257,7 +250,6 @@ public class DatabaseManager {
             stmt.executeUpdate();
         }
         catch (SQLException e) { //if the connection fails, show error
-            JOptionPane.showMessageDialog(null, "Unable to delete item from database"); //generates pop-up box
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return false;
