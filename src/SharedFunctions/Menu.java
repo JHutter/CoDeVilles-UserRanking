@@ -21,10 +21,13 @@ import java.io.IOException;
  * Creation Date: 4/27/2016
  *
  * @author Zack
- * @version 2016.4.27
+ * @version 2016.4.29
+ *
+ * 2016.4.29
+ *      removed debug pop-ups that appeared after closing a menu-launched form
  */
 public class Menu {
-    int choice = 0; //The last item selected
+    int choice = 0; //The last item selected, not used currently
     private JButton adminSetupButton;
     private JButton userSetupButton;
     private JButton takeTestButton;
@@ -44,7 +47,6 @@ public class Menu {
                 choice = 1;
                 try {
                     int status = JavaProcess.exec(MainAdminSetup.class);
-                    JOptionPane.showMessageDialog(null, "Exit status: " + status);
                 } catch (IOException err) {
                     err.printStackTrace();
                 } catch (InterruptedException err) {
@@ -60,7 +62,6 @@ public class Menu {
                 choice = 2;
                 try {
                     int status = JavaProcess.exec(TestUserCreation.class);
-                    JOptionPane.showMessageDialog(null, "Exit status: " + status);
                 } catch (IOException err) {
                     err.printStackTrace();
                 } catch (InterruptedException err) {
@@ -76,7 +77,6 @@ public class Menu {
                 choice = 3;
                 try {
                     int status = JavaProcess.exec(TestUserTest.class);
-                    JOptionPane.showMessageDialog(null, "Exit status: " + status);
                 } catch (IOException err) {
                     err.printStackTrace();
                 } catch (InterruptedException err) {
@@ -92,7 +92,6 @@ public class Menu {
                 choice = 4;
                 try {
                     int status = JavaProcess.exec(TestResultReporting.class);
-                    JOptionPane.showMessageDialog(null, "Exit status: " + status);
                 } catch (IOException err) {
                     err.printStackTrace();
                 } catch (InterruptedException err) {

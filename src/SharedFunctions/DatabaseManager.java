@@ -16,7 +16,11 @@ import java.util.ArrayList;
  * Creation Date: 4/22/2016.
  *
  *  @author Zack and Jinsook
- *  @version 2016.4.25
+ *  @version 2016.4.29
+ *
+ *  2016.4.29:
+ *      Refactored SQL statements to not use SELECT * FROM
+ *      Removed pop-ups from function call failures
  */
 public class DatabaseManager {
     //begin database information strings
