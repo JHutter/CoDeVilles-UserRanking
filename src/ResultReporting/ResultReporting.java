@@ -22,6 +22,7 @@ import java.util.ArrayList;
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
+ *      results name list now only shows user accounts with answered test questions
  *
  */
 public class ResultReporting {

@@ -21,7 +21,7 @@ import java.util.ArrayList;
  *  2016.4.29:
  *      Refactored SQL statements to not use SELECT * FROM
  *      Removed pop-ups from function call failures
- *      Added function to get user accounts that have results associated with them.
+ *      Added function to get user accounts that have results associated with them. (e.g. users that have answered test questions)
  */
 public class DatabaseManager {
     //begin database information strings
