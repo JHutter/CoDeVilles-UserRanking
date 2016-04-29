@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
  *  @version  2016.4.29
  *
  *  2016.4.29
- *      pop-up changes
+ *      reduced number of pop-ups generated
  *
  */
 
