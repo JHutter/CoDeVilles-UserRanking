@@ -18,7 +18,11 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.24.4
+ *  @version 2016.29.4
+ *
+ *  2016.4.29
+ *      added error pop-ups if database read fails
+ *      results name list now only shows user accounts with answered test questions
  *
  */
 public class ResultReporting {
@@ -84,6 +88,8 @@ public class ResultReporting {
         //populate with values from the database
         if(!databaseManager.readAllTestItems(testItems)){
             //close the window due to read failure
+            JOptionPane.showMessageDialog(rootPanel, "Failed to read test items from database. Please check your internet connection and try again.");
+            System.exit(-1);
         }
     }
 
@@ -94,6 +100,8 @@ public class ResultReporting {
         //populate with values from the database
         if(!databaseManager.readAllTestSessions(testSessions)){
             //close the window due to read failure
+            JOptionPane.showMessageDialog(rootPanel, "Failed to read test sessions from database. Please check your internet connection and try again.");
+            System.exit(-2);
         }
     }
 
@@ -104,6 +112,8 @@ public class ResultReporting {
         //populate with values from the database
         if(!databaseManager.readAllTestResults(testResults)){
             //close the window due to read failure
+            JOptionPane.showMessageDialog(rootPanel, "Failed to read test results from database. Please check your internet connection and try again.");
+            System.exit(-3);
         }
     }
 
@@ -112,8 +122,10 @@ public class ResultReporting {
      */
     public void getUserAccounts(){
         //populate with values from the database
-        if(!databaseManager.readAllUserAccounts(userAccounts)){
+        if(!databaseManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
+            JOptionPane.showMessageDialog(rootPanel, "Failed to read user accounts from database. Please check your internet connection and try again.");
+            System.exit(-4);
         }
     }
 
