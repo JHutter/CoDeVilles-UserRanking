@@ -37,12 +37,14 @@ public class UserTakingTestForm {
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
         itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
+        disableFinishButton();
         itemAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 /* TODO refactor this */
                 toggleItemButtonColor(itemAButton, itemBButton, noItemButton);
                 setSelectedItem(itemAButton);
+                enableFinishButton();
             }
         });
         itemBButton.addActionListener(new ActionListener() {
@@ -51,6 +53,7 @@ public class UserTakingTestForm {
                 /* TODO refactor this */
                 toggleItemButtonColor(itemBButton, itemAButton, noItemButton);
                 setSelectedItem(itemBButton);
+                enableFinishButton();
             }
         });
         noItemButton.addActionListener(new ActionListener() {
@@ -59,7 +62,7 @@ public class UserTakingTestForm {
                 /* TODO refactor this */
                 toggleItemButtonColor(noItemButton, itemBButton, itemAButton);
                 setSelectedItem(noItemButton);
-                //database.readAllTestItems(test.getItems());
+                enableFinishButton();
             }
         });
 
@@ -88,6 +91,7 @@ public class UserTakingTestForm {
                         test.incrementTurn();
                         selectedItem = null;
                         setNewItemPairs(test.getCurrentTurn());
+                        disableFinishButton();
                     }
                     else {
                         itemAButton.setVisible(false);
@@ -147,6 +151,15 @@ public class UserTakingTestForm {
     private void finishTest() {
         // write results to database iteratively
         finishButton.setText("Test is complete.\nPlease close this window to finish.");
+    }
+
+    private void enableFinishButton() {
+        finishButton.setEnabled(true);
+        return;
+    }
+    private void disableFinishButton() {
+        finishButton.setEnabled(false);
+        return;
     }
 }
 
