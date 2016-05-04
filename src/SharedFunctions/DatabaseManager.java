@@ -317,7 +317,7 @@ public class DatabaseManager {
             e.printStackTrace();
             return 0;
         }
-    }
+    }*/
 
 
     public ArrayList<TestItem> getTestItems(int testID) {
@@ -340,5 +340,5 @@ public class DatabaseManager {
             e.printStackTrace();
             return null;
         }
-    }*/
+    }
 }

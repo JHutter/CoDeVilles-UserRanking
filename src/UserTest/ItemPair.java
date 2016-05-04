@@ -15,7 +15,7 @@ public class ItemPair {
     /* constructor */
     public ItemPair (TestItem anItem, TestItem anotherItem) {
         Random randomGenerator = new Random();
-        int randomNumber = randomGenerator.nextInt(10);
+        int randomNumber = randomGenerator.nextInt(100);
         if ((randomNumber % 2) == 1) {
             item1 = anItem;
             item2 = anotherItem;

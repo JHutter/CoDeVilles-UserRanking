@@ -50,9 +50,11 @@ public class Test extends ContainerClasses.Test{
         // TODO remove
         TestItem itema = new TestItem(1, "cat");
         TestItem itemb = new TestItem(2, "dog");
+        TestItem itemc = new TestItem(2, "ferret");
         ArrayList<TestItem> items = new ArrayList<>();
         items.add(itema);
         items.add(itemb);
+        items.add(itemc);
         return items;
     }
 

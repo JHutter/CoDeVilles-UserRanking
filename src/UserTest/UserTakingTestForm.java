@@ -25,14 +25,15 @@ public class UserTakingTestForm {
     private JButton noItemButton;
     private JButton finishButton;
 
+    private Test test;
     private UserAccount user;
     private TestSession session;
-    private Test test;
-    //private DatabaseManager database;
+    private DatabaseManager database;
+
     private JButton selectedItem;
 
     public UserTakingTestForm() {
-        //setup();
+        setup();
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
         itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
@@ -111,17 +112,15 @@ public class UserTakingTestForm {
         button3.setBackground(new Color(232,232,232));
     }
 
-    private void setup(){
-        // TODO these don't belong here
-        //database = new DatabaseManager();
-        user = new UserAccount();
-        user.setUserID(1);
+    private void setup() {
         test = new Test();
         test.setTestID(1);
+        user = new UserAccount();
+        user.setUserID(1);
         session = new TestSession();
-        //session.setSessionID(database.getSessionID(user, test));
         session.setSessionID(1);
-        //test.setDBItems(database.getTestItems(test.getTestID()));
+        database = new DatabaseManager();
+        //test.setDBItems(database.get);
         return;
 
     }
