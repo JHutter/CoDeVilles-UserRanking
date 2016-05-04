@@ -13,9 +13,9 @@ import javax.swing.*;
  * @version sprint1-part1
  */
 public class TestUserTest {
+
     /* TODO use session (having user + test) instead of test itself */
     public static void main(String[] args) {
-
         javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui());
     }
 
