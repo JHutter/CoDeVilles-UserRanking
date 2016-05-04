@@ -234,6 +234,11 @@ public class AdminSetupForm {
         return true;
     }
 
+    /**
+     *  Check list is selected to delete
+     *  @return  boolean if list is selected return true
+     */
+
     private boolean isListSelected()
     {
         if (itemList.getSelectedIndex() == -1)      //no item is selected in the list
