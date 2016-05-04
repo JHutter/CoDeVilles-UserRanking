@@ -13,10 +13,13 @@ import java.awt.event.ActionListener;
  * Description: Form for user taking test story
  *
  * Programmer: JoAnne Hutter
- * Date: 2016-04-19
+ * Date: 2016-05-03
  *
  * @author JHutter
- * @version 2016-04-27
+ * @version 2016-05-03
+ *
+ * Modifications: updated testtaking logic, finish/next button enabled and disabled,
+ * method to write to results
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;

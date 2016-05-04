@@ -15,13 +15,15 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Creation Date: 4/22/2016.
  *
- *  @author Zack and Jinsook
- *  @version 2016.4.29
+ *  @author Zack and Jinsook and JoAnne
+ *  @version 2016.5.03
  *
  *  2016.4.29:
  *      Refactored SQL statements to not use SELECT * FROM
  *      Removed pop-ups from function call failures
  *      Added function to get user accounts that have results associated with them. (e.g. users that have answered test questions)
+ *  2016.5.3:
+ *      Added getTestItems and getSessionID methods
  */
 public class DatabaseManager {
     //begin database information strings
