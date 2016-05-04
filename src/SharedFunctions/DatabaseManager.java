@@ -45,6 +45,8 @@ public class DatabaseManager {
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
+    private static final String GET_SESSION_ID_SQL = "SELECT SESSIONID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
+    private static final String GET_TEST_ITEMS_SQL = "SELECT ItemID, ItemText FROM TESTITEMS WHERE TestID = ?";
 
 
     //begin database functions
@@ -298,4 +300,45 @@ public class DatabaseManager {
 
         return true;
     }
+
+    // TODO not done
+    /*public int getSessionID(UserAccount user, Test test) {
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_SESSION_ID_SQL);
+        ){
+            stmt.setInt(1, user.getUserID());
+            stmt.setInt(2, test.getTestID());
+            //stmt.();
+            return 1;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+
+    public ArrayList<TestItem> getTestItems(int testID) {
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_TEST_ITEMS_SQL);
+        ){
+            stmt.setInt(1, testID);
+            ResultSet rs = stmt.executeQuery();
+            ArrayList<TestItem> items = new ArrayList<>();
+            while (rs.next()) {
+                String itemText = rs.getString("ItemText");
+                int itemID = rs.getInt("ItemID");
+                items.add(new TestItem(itemID, itemText));
+            }
+            return items;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }*/
 }

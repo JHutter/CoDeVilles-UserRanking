@@ -1,5 +1,9 @@
 package UserTest;
 
+import ContainerClasses.TestSession;
+import ContainerClasses.UserAccount;
+import SharedFunctions.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,13 +24,18 @@ public class UserTakingTestForm {
     private JButton itemBButton;
     private JButton noItemButton;
     private JButton finishButton;
-    private Test test = new Test();
+
+    private UserAccount user;
+    private TestSession session;
+    private Test test;
+    //private DatabaseManager database;
     private JButton selectedItem;
 
     public UserTakingTestForm() {
+        //setup();
         rootPanel.setPreferredSize(new Dimension(500,350));
-        itemAButton.setText(test.getPairs().get(0).getItem1());
-        itemBButton.setText(test.getPairs().get(0).getItem2());
+        itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
+        itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
         itemAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -92,14 +101,29 @@ public class UserTakingTestForm {
 
     private void setNewItemPairs(int nextTurn) {
         ItemPair nextPair = test.getNextPair(nextTurn);
-        itemAButton.setText(nextPair.getItem1());
-        itemBButton.setText(nextPair.getItem2());
+        itemAButton.setText(nextPair.getItem1().getItemText());
+        itemBButton.setText(nextPair.getItem2().getItemText());
     }
 
     private void resetItemButtonColors(JButton button1, JButton button2, JButton button3) {
         button1.setBackground(new Color(232,232,232));
         button2.setBackground(new Color(232,232,232));
         button3.setBackground(new Color(232,232,232));
+    }
+
+    private void setup(){
+        // TODO these don't belong here
+        //database = new DatabaseManager();
+        user = new UserAccount();
+        user.setUserID(1);
+        test = new Test();
+        test.setTestID(1);
+        session = new TestSession();
+        //session.setSessionID(database.getSessionID(user, test));
+        session.setSessionID(1);
+        //test.setDBItems(database.getTestItems(test.getTestID()));
+        return;
+
     }
 }
 
