@@ -90,15 +90,11 @@ public class UserTakingTestForm {
                         setNewItemPairs(test.getCurrentTurn());
                     }
                     else {
-                        if (test.getCurrentTurn() == test.getTotalTurn()-1) {
-                            itemAButton.setVisible(false);
-                            itemBButton.setVisible(false);
-                            noItemButton.setVisible(false);
-                            finishButton.setText("Finish");
-                        }
-                        else {
-                            finishTest();
-                        }
+                        itemAButton.setVisible(false);
+                        itemBButton.setVisible(false);
+                        noItemButton.setVisible(false);
+                        finishButton.setText("Finish");
+                        finishTest();
                     }
                     resetItemButtonColors(itemAButton, itemBButton, noItemButton);
 
@@ -150,6 +146,7 @@ public class UserTakingTestForm {
 
     private void finishTest() {
         // write results to database iteratively
+        finishButton.setText("Test is complete.\nPlease close this window to finish.");
     }
 }
 
