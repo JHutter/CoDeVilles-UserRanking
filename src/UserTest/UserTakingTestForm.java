@@ -59,6 +59,7 @@ public class UserTakingTestForm {
                 /* TODO refactor this */
                 toggleItemButtonColor(noItemButton, itemBButton, itemAButton);
                 setSelectedItem(noItemButton);
+                //database.readAllTestItems(test.getItems());
             }
         });
 
@@ -68,20 +69,41 @@ public class UserTakingTestForm {
                 /* TODO refactor this */
                 if (selectedItem != null) { /* don't increment turn if an option isn't selected*/
                     if (test.getCurrentTurn() < test.getTotalTurn()-1) {
+                        int itemAID = test.getItemByText(itemAButton.getText()).getItemID();
+                        int itemBID = test.getItemByText(itemBButton.getText()).getItemID();
+
+                        if (selectedItem == itemAButton) {
+                            test.recordResult(itemAID, itemBID, session.getSessionID(), 1);
+                            test.recordResult(itemBID, itemAID, session.getSessionID(), -1);
+                        }
+                        else if (selectedItem == itemBButton) {
+                            test.recordResult(itemAID, itemBID, session.getSessionID(), -1);
+                            test.recordResult(itemBID, itemAID, session.getSessionID(), 1);
+                        }
+                        else {
+                            test.recordResult(itemAID, itemBID, session.getSessionID(), 0);
+                            test.recordResult(itemBID, itemAID, session.getSessionID(), 0);
+                        }
+
                         test.incrementTurn();
                         selectedItem = null;
                         setNewItemPairs(test.getCurrentTurn());
                     }
                     else {
-                        if (test.getCurrentTurn() == test.getTotalTurn()) {
+                        if (test.getCurrentTurn() == test.getTotalTurn()-1) {
+                            itemAButton.setVisible(false);
+                            itemBButton.setVisible(false);
+                            noItemButton.setVisible(false);
                             finishButton.setText("Finish");
+                        }
+                        else {
+                            finishTest();
                         }
                     }
                     resetItemButtonColors(itemAButton, itemBButton, noItemButton);
 
                 }
-                /* TODO remove this */
-                System.out.print("You clicked Next/Finish!\nTurn: " + test.getCurrentTurn() + "\n");
+                return;
             }
         });
     }
@@ -113,16 +135,21 @@ public class UserTakingTestForm {
     }
 
     private void setup() {
-        test = new Test();
+        test = new Test(1);
         test.setTestID(1);
         user = new UserAccount();
         user.setUserID(1);
         session = new TestSession();
         session.setSessionID(1);
         database = new DatabaseManager();
-        //test.setDBItems(database.get);
+        //test.setDBItems(database.getTestItems(test.getTestID()));
+        //test.setDBItems(1);
         return;
 
+    }
+
+    private void finishTest() {
+        // write results to database iteratively
     }
 }
 

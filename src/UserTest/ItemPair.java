@@ -35,5 +35,17 @@ public class ItemPair {
         return item2;
     }
 
+    public TestItem getItemByText(String text) {
+        if (text.equals(item1.getItemText())) {
+            return item1;
+        }
+        else if (text.equals((item2.getItemText()))) {
+            return item2;
+        }
+        else {
+            return null;
+        }
+    }
+
 
 }

@@ -1,6 +1,8 @@
 package UserTest;
 
 import ContainerClasses.TestItem;
+import ContainerClasses.TestResult;
+import SharedFunctions.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,15 +19,21 @@ public class Test extends ContainerClasses.Test{
     private int testID;
     private ArrayList<TestItem> items;
     private ArrayList<ItemPair> pairs;
+    private DatabaseManager database;
+    private ArrayList<TestResult> results;
 
 
     /* constructor */
-    public Test() {
+    public Test(int testID) {
+        database = new DatabaseManager();
         currentTurn = 0;
-        items = getDBitems();
+        this.testID = testID;
+        items = new ArrayList<TestItem>();
+        setBackupItems();
         itemTotal = items.size();
         pairs = generateItemPairs(items);
         turnTotal = pairs.size();
+        results = new ArrayList<>();
         /* TODO add field (collection of some sort) for recording scores */
     }
 
@@ -45,23 +53,27 @@ public class Test extends ContainerClasses.Test{
 
 
     /* methods */
-    public ArrayList<TestItem> getDBitems() {
-        //return new ArrayList<>(Arrays.asList("cat", "dog", "apple", "existential dread", "sunflower"));
-        // TODO remove
-        TestItem itema = new TestItem(1, "cat");
-        TestItem itemb = new TestItem(2, "dog");
-        TestItem itemc = new TestItem(2, "ferret");
-        ArrayList<TestItem> items = new ArrayList<>();
-        items.add(itema);
-        items.add(itemb);
-        items.add(itemc);
+    public ArrayList<TestItem> getItems() {
+        //return database.getTestItems(testID);
         return items;
     }
 
-    public void setDBItems(ArrayList<TestItem> testItems){
-        for (TestItem item : items = testItems) {
-            items.add(item);
+    public void setBackupItems() {
+        ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Forest", "Beach", "Water", "Desert"));
+        int testID = 0;
+        for (String stringItem : stringItems) {
+            items.add(new TestItem(testID, stringItem));
         }
+        //return database.getTestItems(testID);
+        return;
+    }
+
+
+    public void setDBItems(ArrayList<TestItem> testItems){
+        /*for (TestItem item : items = testItems) {
+            items.add(item);
+        }*/
+        items.addAll(testItems);
     }
 
     public void incrementTurn() {
@@ -86,4 +98,19 @@ public class Test extends ContainerClasses.Test{
     public ArrayList<ItemPair> getPairs() {
         return pairs;
     }
+
+    public TestItem getItemByText(String text) {
+        for (TestItem item : items) {
+            if (text.equals(item.getItemText())) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void recordResult(int newQuestionNumber, int newItemID, int newSessionID, int newResult) {
+        results.add(new TestResult(newQuestionNumber, newItemID, newSessionID, newResult));
+    }
+
+
 }

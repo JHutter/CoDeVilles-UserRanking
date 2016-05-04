@@ -159,6 +159,7 @@ public class DatabaseManager {
                                 rs.getInt("TestID"),
                                 rs.getString("itemText")
                         ));
+
             }
 
         } catch (SQLException e) { //if the connection fails, show error
@@ -321,7 +322,7 @@ public class DatabaseManager {
 
 
     public ArrayList<TestItem> getTestItems(int testID) {
-        try ( //try to create a database connection
+        try ( //try t create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
               PreparedStatement stmt = connection.prepareStatement(GET_TEST_ITEMS_SQL);
         ){
