@@ -8,8 +8,8 @@ import javax.swing.*;
 public class UserSignInForm {
     private JPanel panel1;
     private JPasswordField emailPasswordField;
-    private JButton button1;
-    private JComboBox comboBox1;
-    private JTextArea welcomePleaseSignInTextArea;
+    private JButton signInButton;
+    private JComboBox testComboBox;
+    private JTextArea instructionsBox;
     private JTextField emailTextField;
 }
