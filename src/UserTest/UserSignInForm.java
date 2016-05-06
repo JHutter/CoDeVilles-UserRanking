@@ -12,4 +12,7 @@ public class UserSignInForm {
     private JComboBox testComboBox;
     private JTextArea instructionsBox;
     private JTextField emailTextField;
+    private JButton button1;
+    private JComboBox comboBox1;
+    private JTextArea welcomePleaseSignInTextArea;
 }

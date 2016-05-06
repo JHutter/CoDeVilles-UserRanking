@@ -334,7 +334,7 @@ public class DatabaseManager {
             while (rs.next()) {
                 String itemText = rs.getString("ItemText");
                 int itemID = rs.getInt("ItemID");
-                items.add(new TestItem(itemID, itemText));
+                items.add(new TestItem(itemID, testID, itemText));
             }
             return items;
         }

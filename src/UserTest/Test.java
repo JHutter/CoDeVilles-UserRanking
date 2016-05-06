@@ -25,14 +25,15 @@ public class Test extends ContainerClasses.Test{
 
     /* constructor */
     public Test(int testID) {
-        database = new DatabaseManager();
         currentTurn = 0;
         this.testID = testID;
         items = new ArrayList<TestItem>();
-        setBackupItems();
-        itemTotal = items.size();
-        pairs = generateItemPairs(items);
-        turnTotal = pairs.size();
+        DatabaseManager database = new DatabaseManager();
+        setDBItems(database.getTestItems(testID));
+        if (itemTotal == 0) {
+            setBackupItems();
+        }
+
         results = new ArrayList<>();
         /* TODO add field (collection of some sort) for recording scores */
     }
@@ -43,8 +44,7 @@ public class Test extends ContainerClasses.Test{
             TestItem outerItem = items.get(outer);
             for (int inner = outer+1; inner < itemTotal; inner++) {
                 TestItem innerItem = items.get(inner);
-                ItemPair currentPair = new ItemPair(outerItem, innerItem);
-                generatedPairs.add(currentPair);
+                generatedPairs.add(new ItemPair(outerItem, innerItem));
             }
         }
         Collections.shuffle(generatedPairs);
@@ -59,11 +59,15 @@ public class Test extends ContainerClasses.Test{
     }
 
     public void setBackupItems() {
-        ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Forest", "Beach", "Water", "Desert"));
+        ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Tablet", "PC - Windows", "PC - Mac", "Smartphone", "Raspberry Pi"));
         int testID = 0;
+        int itemID = 0;
         for (String stringItem : stringItems) {
-            items.add(new TestItem(testID, stringItem));
+            items.add(new TestItem(itemID, testID, stringItem));
         }
+        itemTotal = items.size();
+        pairs = generateItemPairs(items);
+        turnTotal = pairs.size();
         //return database.getTestItems(testID);
         return;
     }
@@ -73,7 +77,13 @@ public class Test extends ContainerClasses.Test{
         /*for (TestItem item : items = testItems) {
             items.add(item);
         }*/
-        items.addAll(testItems);
+        items = null;
+        items = testItems;
+        generateItemPairs(items);
+        itemTotal = items.size();
+        pairs = generateItemPairs(items);
+        turnTotal = pairs.size();
+        //items.addAll(testItems);
     }
 
     public void incrementTurn() {

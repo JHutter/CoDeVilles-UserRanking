@@ -1,5 +1,6 @@
 package UserTest;
 
+import ContainerClasses.TestItem;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 import SharedFunctions.DatabaseManager;
@@ -8,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Description: Form for user taking test story
@@ -144,9 +146,6 @@ public class UserTakingTestForm {
         user.setUserID(1);
         session = new TestSession();
         session.setSessionID(1);
-        database = new DatabaseManager();
-        //test.setDBItems(database.getTestItems(test.getTestID()));
-        //test.setDBItems(1);
         return;
 
     }
