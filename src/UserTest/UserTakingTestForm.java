@@ -144,7 +144,7 @@ public class UserTakingTestForm {
         test.setTestID(1);
         user = new UserAccount();
         user.setUserID(1);
-        session = new TestSession();
+        session = new TestSession(1,test.getTestID(), user.getUserID(), true);
         session.setSessionID(1);
         return;
 
