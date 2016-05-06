@@ -49,6 +49,10 @@ public class DatabaseManager {
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
     private static final String GET_SESSION_ID_SQL = "SELECT SESSIONID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
     private static final String GET_TEST_ITEMS_SQL = "SELECT ItemID, ItemText FROM TESTITEMS WHERE TestID = ?";
+    private static final String SET_IS_ACTIVE_SQL = "UPDATE TESTSESSIONS SET isActive = 1 WHERE SessionID = ?" +
+                                                                "and UserID = ? and  TestID = ?";
+    private static final String INSERT_RESULT_SQL = "INSERT INTO TESTRESULTS (QuestionNumber, ItemID, SessionID, Result)" +
+                                                                " values (?, ?, ?, ?)";
 
 
     //begin database functions
@@ -304,7 +308,6 @@ public class DatabaseManager {
         return true;
     }
 
-    // TODO not done
     /*public int getSessionID(UserAccount user, Test test) {
         try ( //try to create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -342,6 +345,56 @@ public class DatabaseManager {
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Set isActive to true when a test is being taken by the user
+     * @param sessionID int, the ID for the session
+     * @param userID int, the ID for the user
+     * @param testID int, the ID for the test
+     */
+    public void setIsActive(int sessionID, int userID, int testID) {
+        try ( //try t create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(SET_IS_ACTIVE_SQL);
+        ){
+            stmt.setInt(1, sessionID);
+            stmt.setInt(2, userID);
+            stmt.setInt(3, testID);
+            stmt.executeUpdate();
+            return;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    /**
+     * Add test results to database
+     * @param questionNumber int, the ID for the item
+     * @param itemID int, the ID for the matched item
+     * @param sessionID int, the ID for the session
+     * @param result int, the result of the matchup (-1,0,1)
+     */
+    public void insertResult(int questionNumber, int itemID, int sessionID, int result) {
+        try ( //try t create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(INSERT_RESULT_SQL);
+        ){
+            stmt.setInt(1, questionNumber);
+            stmt.setInt(2, itemID);
+            stmt.setInt(3, sessionID);
+            stmt.setInt(4, result);
+            stmt.executeUpdate();
+            return;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return;
         }
     }
 }

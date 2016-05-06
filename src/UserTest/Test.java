@@ -120,6 +120,17 @@ public class Test extends ContainerClasses.Test{
 
     public void recordResult(int newQuestionNumber, int newItemID, int newSessionID, int newResult) {
         results.add(new TestResult(newQuestionNumber, newItemID, newSessionID, newResult));
+
+    }
+
+    public void writeResults() {
+        database = new DatabaseManager();
+        for (TestResult result : results) {
+            database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
+        }
+    }
+    public ArrayList<TestResult> getResults() {
+        return results;
     }
 
 

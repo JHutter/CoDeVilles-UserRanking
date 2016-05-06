@@ -1,6 +1,7 @@
 package UserTest;
 
 import ContainerClasses.TestItem;
+import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 import SharedFunctions.DatabaseManager;
@@ -118,10 +119,10 @@ public class UserTakingTestForm {
     }
 
     private void toggleItemButtonColor(JButton buttonClicked, JButton buttonOther, JButton buttonOtherOther) {
-        /* TODO make the colors prettier */
+        // JButton().getBackground idea thanks to http://stackoverflow.com/questions/1358398/how-to-get-jbutton-default-background-color
         buttonClicked.setBackground(Color.lightGray);
-        buttonOther.setBackground(new Color(232,232,232));
-        buttonOtherOther.setBackground(new Color(232,232,232));
+        buttonOther.setBackground(new JButton().getBackground());
+        buttonOtherOther.setBackground(new JButton().getBackground());
     }
     private void setSelectedItem(JButton button) {
         selectedItem = button;
@@ -134,18 +135,20 @@ public class UserTakingTestForm {
     }
 
     private void resetItemButtonColors(JButton button1, JButton button2, JButton button3) {
-        button1.setBackground(new Color(232,232,232));
-        button2.setBackground(new Color(232,232,232));
-        button3.setBackground(new Color(232,232,232));
+        // JButton().getBackground idea thanks to http://stackoverflow.com/questions/1358398/how-to-get-jbutton-default-background-color
+        button1.setBackground(new JButton().getBackground());
+        button2.setBackground(new JButton().getBackground());
+        button3.setBackground(new JButton().getBackground());
     }
 
     private void setup() {
         test = new Test(1);
         test.setTestID(1);
         user = new UserAccount();
-        user.setUserID(1);
-        session = new TestSession(1,test.getTestID(), user.getUserID(), true);
-        session.setSessionID(1);
+        user.setUserID(3);
+        session = new TestSession(3,test.getTestID(), user.getUserID(), true);
+        database = new DatabaseManager();
+        database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
         return;
 
     }
@@ -153,6 +156,7 @@ public class UserTakingTestForm {
     private void finishTest() {
         // write results to database iteratively
         finishButton.setText("Test is complete.\nPlease close this window to finish.");
+        test.writeResults();
     }
 
     private void enableFinishButton() {
