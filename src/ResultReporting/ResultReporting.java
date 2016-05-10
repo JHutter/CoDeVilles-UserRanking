@@ -34,6 +34,7 @@ public class ResultReporting {
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
+    private ArrayList<RankedItem> rankedResults;
     private DatabaseManager databaseManager;
 
     /**
@@ -145,6 +146,7 @@ public class ResultReporting {
      */
     public void fillResultsBox(){
         int win = 0, loss = 0, tie = 0;
+        rankedResults = new ArrayList<RankedItem>();
 
         //reset the text box and add the header
         resultList.setText("");
@@ -175,12 +177,21 @@ public class ResultReporting {
                     }
                 }
             }
+
             //write the data after parsing
-            resultList.append(testItem.getItemText() + "\t" + win + "\t" + loss + "\t" + tie + "\n");
+            rankedResults.add(new RankedItem(testItem, win, loss, tie));
+            //resultList.append(testItem.getItemText() + "\t" + win + "\t" + loss + "\t" + tie + "\n");
             //reset counters
             win = 0;
             loss = 0;
             tie = 0;
+        }
+
+        for (RankedItem rankedItem : rankedResults){
+            resultList.append(rankedItem.getItemText() + "\t" +
+                    rankedItem.getWin() + "\t" +
+                    rankedItem.getLoss() + "\t" +
+                    rankedItem.getTie() + "\n");
         }
     }
 }
