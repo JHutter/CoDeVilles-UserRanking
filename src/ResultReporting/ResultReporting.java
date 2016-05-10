@@ -152,7 +152,7 @@ public class ResultReporting {
         resultList.setText("");
         resultList.append("Item \t Win \t Loss \t Tie \n");
 
-        //for each item print results
+        //for each item generate results
         for (TestItem testItem : testItems) {
             //for each test session check user id
             for(TestSession testSession: testSessions) {
@@ -178,20 +178,33 @@ public class ResultReporting {
                 }
             }
 
-            //write the data after parsing
+            //write the data to the ranked items list after parsing
             rankedResults.add(new RankedItem(testItem, win, loss, tie));
-            //resultList.append(testItem.getItemText() + "\t" + win + "\t" + loss + "\t" + tie + "\n");
             //reset counters
             win = 0;
             loss = 0;
             tie = 0;
         }
 
-        for (RankedItem rankedItem : rankedResults){
-            resultList.append(rankedItem.getItemText() + "\t" +
-                    rankedItem.getWin() + "\t" +
-                    rankedItem.getLoss() + "\t" +
-                    rankedItem.getTie() + "\n");
+        for (TestItem testItem: testItems){
+            printAndDeleteHighestItem();
         }
+    }
+
+    /**
+     * prints the highest ranked item to the results box then removes it from the list
+     */
+    public void printAndDeleteHighestItem(){
+        RankedItem highestItem = new RankedItem();
+        for (RankedItem rankedItem: rankedResults){
+            if(rankedItem.getWin() >= highestItem.getWin()){
+                highestItem = rankedItem;
+            }
+        }
+        resultList.append(highestItem.getItemText() + "\t" +
+                highestItem.getWin() + "\t" +
+                highestItem.getLoss() + "\t" +
+                highestItem.getTie() + "\n");
+        rankedResults.remove(highestItem);
     }
 }
