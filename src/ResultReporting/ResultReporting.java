@@ -167,7 +167,7 @@ public class ResultReporting {
      */
     public void generateResultsList(){
         int win = 0, loss = 0, tie = 0;
-        int selectedUserID = nameBox.getSelectedIndex();
+        int selectedUserID = userAccounts.get(nameBox.getSelectedIndex()).getUserID();
         rankedResults = new ArrayList<RankedItem>();
 
         //for each item generate results
@@ -175,7 +175,7 @@ public class ResultReporting {
             //for each test session check user id
             for(TestSession testSession: testSessions) {
                 //if the session belongs to the user selected, then continue
-                if (testSession.getUserID() == userAccounts.get(selectedUserID).getUserID()){
+                if (testSession.getUserID() == selectedUserID){
                     //parse each object in the results list for data
                     for (TestResult testResult : testResults) {
                         //if the result belongs to the session in the current iteration, and the result is for the item in the current iteration, then count the result
