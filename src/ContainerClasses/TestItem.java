@@ -10,8 +10,8 @@ package ContainerClasses;
  */
 public class TestItem {
 
-    private int itemID, testID;
-    private String itemText;
+    protected int itemID, testID;
+    protected String itemText;
 
     //Begin Get functions
     /**
