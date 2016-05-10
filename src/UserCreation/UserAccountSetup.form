@@ -10,10 +10,12 @@
     <children>
       <component id="72b7a" class="javax.swing.JLabel">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="16"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Re-Enter Password"/>
+          <text value=" Re-Enter Password                  "/>
         </properties>
       </component>
       <component id="e2256" class="javax.swing.JTextField" binding="passField2">
@@ -42,10 +44,12 @@
       </component>
       <component id="ae276" class="javax.swing.JLabel">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="16"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Enter Password"/>
+          <text value=" Enter Password"/>
         </properties>
       </component>
       <component id="3454d" class="javax.swing.JTextField" binding="nameField">
@@ -58,10 +62,12 @@
       </component>
       <component id="29d6c" class="javax.swing.JLabel">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="16"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Name"/>
+          <text value=" Name"/>
         </properties>
       </component>
       <component id="e8dcf" class="javax.swing.JTextField" binding="emailField">
@@ -74,10 +80,12 @@
       </component>
       <component id="67e03" class="javax.swing.JLabel">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="16"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="Email Address"/>
+          <text value=" Email Address"/>
         </properties>
       </component>
       <component id="53ea3" class="javax.swing.JLabel">
@@ -96,6 +104,26 @@
         </constraints>
         <properties>
           <text value="Cancel"/>
+        </properties>
+      </component>
+      <component id="b1c11" class="javax.swing.JLabel" binding="errorLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="0"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="7ccf0" class="javax.swing.JLabel" binding="errorFlagLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="126" height="0"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value=""/>
         </properties>
       </component>
     </children>

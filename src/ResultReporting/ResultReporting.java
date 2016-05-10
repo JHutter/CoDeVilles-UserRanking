@@ -18,11 +18,15 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.29.4
+ *  @version 2016.9.5
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
  *      results name list now only shows user accounts with answered test questions
+ *
+ *  2016.5.9
+ *      results list now displays items in order of wins
+ *      refactored code for cleaner appearance
  *
  */
 public class ResultReporting {
@@ -34,6 +38,7 @@ public class ResultReporting {
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
+    private ArrayList<RankedItem> rankedResults;
     private DatabaseManager databaseManager;
 
     /**
@@ -144,18 +149,33 @@ public class ResultReporting {
      * results are parsed from the test results array list
      */
     public void fillResultsBox(){
-        int win = 0, loss = 0, tie = 0;
 
         //reset the text box and add the header
         resultList.setText("");
         resultList.append("Item \t Win \t Loss \t Tie \n");
 
-        //for each item print results
+        //generate a list of ranked results for the current user
+        generateResultsList();
+
+        //for each item in the unranked item list, print the highest ranked item and remove it from the ranked item list
+        for (TestItem testItem: testItems){
+            printAndDeleteHighestItem();
+        }
+    }
+    /**
+     * takes the results list and item list and combines it into a list of ranked items based on the user selected
+     */
+    public void generateResultsList(){
+        int win = 0, loss = 0, tie = 0;
+        int selectedUserID = userAccounts.get(nameBox.getSelectedIndex()).getUserID();
+        rankedResults = new ArrayList<RankedItem>();
+
+        //for each item generate results
         for (TestItem testItem : testItems) {
             //for each test session check user id
             for(TestSession testSession: testSessions) {
                 //if the session belongs to the user selected, then continue
-                if (testSession.getUserID() == userAccounts.get(nameBox.getSelectedIndex()).getUserID()){
+                if (testSession.getUserID() == selectedUserID){
                     //parse each object in the results list for data
                     for (TestResult testResult : testResults) {
                         //if the result belongs to the session in the current iteration, and the result is for the item in the current iteration, then count the result
@@ -175,12 +195,34 @@ public class ResultReporting {
                     }
                 }
             }
-            //write the data after parsing
-            resultList.append(testItem.getItemText() + "\t" + win + "\t" + loss + "\t" + tie + "\n");
+
+            //write the data to the ranked items list after parsing
+            rankedResults.add(new RankedItem(testItem, win, loss, tie));
             //reset counters
             win = 0;
             loss = 0;
             tie = 0;
         }
+    }
+
+    /**
+     * prints the highest ranked item to the results box then removes it from the list
+     */
+    public void printAndDeleteHighestItem(){
+        RankedItem highestItem = new RankedItem();
+
+        //find the highest ranked item
+        for (RankedItem rankedItem: rankedResults){
+            if(rankedItem.getWin() >= highestItem.getWin()){
+                highestItem = rankedItem;
+            }
+        }
+        //print the highest ranked item
+        resultList.append(highestItem.getItemText() + "\t" +
+                highestItem.getWin() + "\t" +
+                highestItem.getLoss() + "\t" +
+                highestItem.getTie() + "\n");
+        //remove the highest ranked item from the list
+        rankedResults.remove(highestItem);
     }
 }

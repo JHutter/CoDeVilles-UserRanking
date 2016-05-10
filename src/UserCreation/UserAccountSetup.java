@@ -16,10 +16,14 @@ import java.awt.event.ActionListener;
  * Date Created: 4/19/2016
  *
  *  @author  Zack
- *  @version  2016.4.29
+ *  @version  2016.5.9
  *
  *  2016.4.29
  *      reduced number of pop-ups generated
+ *
+ *  2016.5.9
+ *      error messages now appear in labels instead of in text boxes
+ *      minor clean up
  *
  */
 
@@ -31,6 +35,8 @@ public class UserAccountSetup {
     private JTextField nameField;
     private JTextField emailField;
     private JButton cancelButton;
+    private JLabel errorLabel;
+    private JLabel errorFlagLabel;
     private UserAccount account;
     private DatabaseManager databaseManager;
 
@@ -65,23 +71,30 @@ public class UserAccountSetup {
                                 JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() +
                                                                          "\nemail: " + account.getEmail() +
                                                                          "\npassword: " + account.getPassword());
+                                errorFlagLabel.setText("");
+                                errorLabel.setText("");
                             } else {
                                 //show error message if insert fails
                                 JOptionPane.showMessageDialog(rootPanel, "Unable to create account. Please ensure you are using a unique email\n" +
                                                                          "and check your internet connection");
+                                errorFlagLabel.setText("");
+                                errorLabel.setText("");
                             }
                         } else {
                             //show message on invalid password
-                            passField1.setText("Invalid Password.");
-                            passField2.setText("Both passwords must be the same (and not blank).");
+                            errorFlagLabel.setText("!Invalid Password!");
+                            errorLabel.setText("!Passwords must match!");
+
                         }
                     } else {
                         //show message on blank name
-                        nameField.setText("Name can not be blank.");
+                        errorFlagLabel.setText("!Invalid Name!");
+                        errorLabel.setText("!Name can't be blank!");
                     }
                 } else {
                     //show message on blank email
-                    emailField.setText("Email can not be blank.");
+                    errorFlagLabel.setText("!Invalid Email!");
+                    errorLabel.setText("!Email can't be blank!");
                 }
             }
         });
