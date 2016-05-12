@@ -5,6 +5,8 @@ import ContainerClasses.TestSession;
 import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +20,7 @@ import java.lang.String;
  * Create Date 04/18/2016
  *
  * @author   Jinsook Lee
- * @version  05/03/2016
+ * @version  05/11/2016
  *
  * Modification
  * 05/03/2016
@@ -27,6 +29,9 @@ import java.lang.String;
  * - Focus on itemTextField after click add item button
  * - Add isDuplicate method to check item duplication
  * - Add isListSelected to check item is selected in the list
+ * 05/11/2016
+ * - Add checkListSelected method to disable delete button if there's nothing selected
+ * - Update isValidLength method to remove function to wiping out a user's entry after check length of item text
  */
 
 public class AdminSetupForm {
@@ -41,9 +46,9 @@ public class AdminSetupForm {
 
     private DatabaseManager databaseManager;
     private ArrayList<TestItem> testItems;
-    private ArrayList<TestSession> testSessions; //add 5/1
+    private ArrayList<TestSession> testSessions;
     private DefaultListModel listModel = new DefaultListModel();
-    private TestItem titem;
+    private TestItem tItem;
 
     /**
      *  Constructor
@@ -55,7 +60,7 @@ public class AdminSetupForm {
         databaseManager = new DatabaseManager();    //create instance of DatabaseManager
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
-        testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist //add 5/1
+        testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
 
         getSessions();
         getItems();
@@ -63,6 +68,7 @@ public class AdminSetupForm {
         showItemList();
         ckeckTakenTest();
         checkItemNumber();
+        checkListSelected();
 
         addButton.addActionListener(new ActionListener() {
             @Override
@@ -91,6 +97,11 @@ public class AdminSetupForm {
                 cancelItem();
             }
         });
+
+        itemList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {checkListSelected();}
+        });
     }
 
     /**
@@ -115,8 +126,8 @@ public class AdminSetupForm {
      * Show exist items on the list from DB
      */
     public void showItemList(){
-       for(TestItem titem : testItems) {
-              listModel.addElement(titem.getItemText());
+       for(TestItem tItem : testItems) {
+              listModel.addElement(tItem.getItemText());
        }
         itemList.setModel(listModel);
     }
@@ -127,8 +138,8 @@ public class AdminSetupForm {
     public void addItem() {
         if (isValidLength())     //item is valid length
             if (!isDuplicate() && isValidLength()) {       //item is not duplicated
-                titem = new TestItem(1, itemTextField.getText());
-                if (!databaseManager.insertTestItem(titem)) {
+                tItem = new TestItem(1, itemTextField.getText());
+                if (!databaseManager.insertTestItem(tItem)) {
                     JOptionPane.showMessageDialog(rootPanel, "Failed to add item to database.");
                     itemTextField.requestFocus();
                 } else {                                                                       //query is executed query without error
@@ -148,8 +159,8 @@ public class AdminSetupForm {
      */
     public void deleteItem() {
         if(isListSelected()){
-            titem = new TestItem(1, (String) itemList.getSelectedValue());
-            if (!databaseManager.deleteTestItem(titem)) {   //query is executed query without error
+            tItem = new TestItem(1, (String) itemList.getSelectedValue());
+            if (!databaseManager.deleteTestItem(tItem)) {   //query is executed query without error
                 JOptionPane.showMessageDialog(rootPanel, "Failed to delete user accounts from database.");
             }else{
                 listModel.remove(itemList.getSelectedIndex());      //the item is removed from the list
@@ -202,6 +213,16 @@ public class AdminSetupForm {
         }
     }
 
+    private void checkListSelected() {
+        if (itemList.getSelectedIndex() == -1) {
+            deleteButton.setEnabled(false);
+        }
+        else {
+
+            deleteButton.setEnabled(true);
+        }
+    }
+
     /**
      *  Check input item is not duplicated.
      *  @return  boolean if it is duplicated return true
@@ -222,7 +243,6 @@ public class AdminSetupForm {
     private boolean isValidLength() {
         if (itemTextField.getText().length() > 50) {        //max length of text is 50
             JOptionPane.showMessageDialog(rootPanel, "Please input item text within 50 characters.");
-            itemTextField.setText("");
             itemTextField.requestFocus();
             return false;
         }
