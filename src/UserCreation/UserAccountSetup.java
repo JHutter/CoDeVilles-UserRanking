@@ -1,7 +1,7 @@
 package UserCreation;
 
 import ContainerClasses.UserAccount;
-import SharedFunctions.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
