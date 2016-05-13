@@ -37,9 +37,18 @@ public class UserTakingTestForm {
     private DatabaseManager database;
 
     private JButton selectedItem;
+    private JOptionPaneMultiple dialogBox;
 
     public UserTakingTestForm() {
-        setup();
+        //database = new DatabaseManager();
+        //String path = JOptionPane.showInputDialog(rootPanel, "Enter a path");
+        dialogBox = new JOptionPaneMultiple();
+
+        String email = dialogBox.getEmail();
+        int userID = new DatabaseManager().getUserID(email);
+
+        setup(userID);
+
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
         itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
@@ -141,16 +150,17 @@ public class UserTakingTestForm {
         button3.setBackground(new JButton().getBackground());
     }
 
-    private void setup() {
+    private void setup(int userID) {
         test = new Test(1);
-        test.setTestID(1);
         user = new UserAccount();
-        user.setUserID(3);
-        session = new TestSession(3,test.getTestID(), user.getUserID(), true);
+        user.setUserID(userID);
+        session = new TestSession(test.getTestID(), user.getUserID(), true);
         database = new DatabaseManager();
+        //database.insertSession(user.getUserID(), test.getTestID());
+        session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
+        //session.setSessionID(3);
         database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
         return;
-
     }
 
     private void finishTest() {

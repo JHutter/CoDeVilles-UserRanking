@@ -47,12 +47,14 @@ public class DatabaseManager {
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
-    private static final String GET_SESSION_ID_SQL = "SELECT SESSIONID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
     private static final String GET_TEST_ITEMS_SQL = "SELECT ItemID, ItemText FROM TESTITEMS WHERE TestID = ?";
     private static final String SET_IS_ACTIVE_SQL = "UPDATE TESTSESSIONS SET isActive = 1 WHERE SessionID = ?" +
                                                                 "and UserID = ? and  TestID = ?";
     private static final String INSERT_RESULT_SQL = "INSERT INTO TESTRESULTS (QuestionNumber, ItemID, SessionID, Result)" +
                                                                 " values (?, ?, ?, ?)";
+    private static final String GET_USER_ID_SQL = "SELECT UserID from USERACCOUNTS WHERE Email = ?";
+    private static final String INSERT_NEW_SESSION_SQL = "INSERT INTO TESTSESSIONS (UserID, TestID, isActive) values (?, ?, 0)";
+    private static final String GET_SESSION_SQL = "SELECT SessionID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
 
 
     //begin database functions
@@ -308,22 +310,43 @@ public class DatabaseManager {
         return true;
     }
 
-    /*public int getSessionID(UserAccount user, Test test) {
+    public void insertSession(int userID, int testID){
         try ( //try to create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
-              PreparedStatement stmt = connection.prepareStatement(GET_SESSION_ID_SQL);
+              PreparedStatement stmt = connection.prepareStatement(INSERT_NEW_SESSION_SQL);
         ){
-            stmt.setInt(1, user.getUserID());
-            stmt.setInt(2, test.getTestID());
-            //stmt.();
-            return 1;
+            stmt.setInt(1, userID);
+            stmt.setInt(2, testID);
+            stmt.executeUpdate();
+            return;
         }
         catch (SQLException e) { //if the connection fails, show error
             System.err.println("ERROR: " + e.getMessage());
             e.printStackTrace();
-            return 0;
+            return;
         }
-    }*/
+    }
+
+    public int getSessionID(int userID, int testID) {
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_SESSION_SQL);
+        ){
+            stmt.setInt(1, userID);
+            stmt.setInt(2, testID);
+            ResultSet rs = stmt.executeQuery();
+            int sessionID = 3; //TODO fix this. not sure why rs.next is false every time
+            while (rs.next()) {
+                sessionID = rs.getInt("SessionID");
+            }
+            return sessionID;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
 
     public ArrayList<TestItem> getTestItems(int testID) {
@@ -397,4 +420,31 @@ public class DatabaseManager {
             return;
         }
     }
+
+    /**
+     * Add test results to database
+     * @param email String, the email of the user
+     * @return userID int, the userID that matches the email provided
+     */
+    public int getUserID(String email) {
+        try ( //try t create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(GET_USER_ID_SQL);
+        ){
+            int userID = -1;
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                userID = rs.getInt("UserID");
+            }
+            return userID;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+
 }
