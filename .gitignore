@@ -5,3 +5,6 @@
 .idea/
 out/
 *.iml
+
+#meta file
+src/META-INF/
