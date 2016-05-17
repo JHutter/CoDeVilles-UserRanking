@@ -16,14 +16,18 @@ import java.util.ArrayList;
  * Creation Date: 4/22/2016.
  *
  *  @author Zack and Jinsook and JoAnne
- *  @version 2016.5.03
+ *  @version 2016.5.16
  *
  *  2016.4.29:
  *      Refactored SQL statements to not use SELECT * FROM
  *      Removed pop-ups from function call failures
  *      Added function to get user accounts that have results associated with them. (e.g. users that have answered test questions)
+ *
  *  2016.5.3:
  *      Added getTestItems and getSessionID methods
+ *
+ *  2016.5.16
+ *      Added clause to GET_USERS_HAVING_RESULTS_SQL to oder accounts alphabetically by email address
  */
 public class DatabaseManager {
     //begin database information strings
@@ -43,7 +47,8 @@ public class DatabaseManager {
                                                                 "WHERE EXISTS (SELECT UserID FROM TESTSESSIONS " +
                                                                 "WHERE USERACCOUNTS.UserID = TESTSESSIONS.UserID " +
                                                                 "AND EXISTS (SELECT SessionID FROM TESTRESULTS " +
-                                                                "WHERE TESTSESSIONS.SessionID = TESTRESULTS.SessionID))";
+                                                                "WHERE TESTSESSIONS.SessionID = TESTRESULTS.SessionID)) " +
+                                                                "ORDER BY Email";
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";

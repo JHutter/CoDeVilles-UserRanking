@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.9.5
+ *  @version 2016.5.16
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
@@ -27,6 +27,9 @@ import java.util.ArrayList;
  *  2016.5.9
  *      results list now displays items in order of wins
  *      refactored code for cleaner appearance
+ *
+ *  2016.5.16
+ *      results list will no longer show items with all 0's (items that have not been part of a question)
  *
  */
 public class ResultReporting {
@@ -217,11 +220,13 @@ public class ResultReporting {
                 highestItem = rankedItem;
             }
         }
-        //print the highest ranked item
-        resultList.append(highestItem.getItemText() + "\t" +
-                highestItem.getWin() + "\t" +
-                highestItem.getLoss() + "\t" +
-                highestItem.getTie() + "\n");
+        //print the highest ranked item if the item doesn't have all 0 values
+        if(highestItem.getWin() != 0 || highestItem.getLoss() != 0 || highestItem.getTie() != 0) {
+            resultList.append(highestItem.getItemText() + "\t" +
+                    highestItem.getWin() + "\t" +
+                    highestItem.getLoss() + "\t" +
+                    highestItem.getTie() + "\n");
+        }
         //remove the highest ranked item from the list
         rankedResults.remove(highestItem);
     }
