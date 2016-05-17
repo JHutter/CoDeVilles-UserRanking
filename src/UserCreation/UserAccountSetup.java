@@ -27,6 +27,8 @@ import java.awt.event.ActionListener;
  *
  *  2016.5.16
  *      refactored GUI input data validation to use individual methods
+ *      added emailField.requestFocus() call at form open
+ *      added .requestFocus() calls to input validation methods
  *
  */
 
@@ -83,7 +85,6 @@ public class UserAccountSetup {
             }
         });
 
-
         //on click listener for cancel button
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -91,6 +92,9 @@ public class UserAccountSetup {
                 System.exit(0);//exit on cancel
             }
         });
+
+        //set focus on the email field at form start
+        emailField.requestFocus();
     }
 
     /**
@@ -110,6 +114,9 @@ public class UserAccountSetup {
             //show message on blank email
             errorFlagLabel.setText("!Invalid Email!");
             errorLabel.setText("!Email can't be blank!");
+
+            //set focus on the email field
+            emailField.requestFocus();
             return false;
         }
     }
@@ -126,6 +133,9 @@ public class UserAccountSetup {
             //show message on blank name
             errorFlagLabel.setText("!Invalid Name!");
             errorLabel.setText("!Name can't be blank!");
+
+            //set focus on the name field
+            nameField.requestFocus();
             return false;
         }
     }
@@ -142,6 +152,9 @@ public class UserAccountSetup {
             //show message on invalid password
             errorFlagLabel.setText("!Invalid Password!");
             errorLabel.setText("!Pass can't be blank!");
+
+            //set focus on the first password field
+            passField1.requestFocus();
             return false;
         }
     }
@@ -158,6 +171,9 @@ public class UserAccountSetup {
             //show message on invalid password
             errorFlagLabel.setText("!Invalid Password!");
             errorLabel.setText("!Passwords must match!");
+
+            //set focus on the second password field
+            passField2.requestFocus();
             return false;
         }
     }
