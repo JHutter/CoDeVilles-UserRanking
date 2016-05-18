@@ -16,7 +16,7 @@ import java.util.ArrayList;
  * Creation Date: 4/22/2016.
  *
  *  @author Zack and Jinsook and JoAnne
- *  @version 2016.5.03
+ *  @version 2016.5.10
  *
  *  2016.4.29:
  *      Refactored SQL statements to not use SELECT * FROM
@@ -24,6 +24,11 @@ import java.util.ArrayList;
  *      Added function to get user accounts that have results associated with them. (e.g. users that have answered test questions)
  *  2016.5.3:
  *      Added getTestItems and getSessionID methods
+ *  2016.5.10:
+ *      Updated getSessionID
+ *      Added insertSessionID
+ *      Added insertResult
+ *      Added getUserID
  */
 public class DatabaseManager {
     //begin database information strings
@@ -310,6 +315,11 @@ public class DatabaseManager {
         return true;
     }
 
+    /**
+     *  Insert a new test session in the database
+     * @param  userID the ID of the user taking the test
+     * @param  testID the ID of the test being taken
+     */
     public void insertSession(int userID, int testID){
         try ( //try to create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -327,6 +337,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     *  Get a test session from the database
+     * @param  userID the ID of the user taking the test
+     * @param  testID the ID of the test being taken
+     * @return sessionID the ID of the testSession
+     */
     public int getSessionID(int userID, int testID) {
         try ( //try to create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
@@ -335,7 +351,7 @@ public class DatabaseManager {
             stmt.setInt(1, userID);
             stmt.setInt(2, testID);
             ResultSet rs = stmt.executeQuery();
-            int sessionID = 3; //TODO fix this. not sure why rs.next is false every time
+            int sessionID = 3; // TODO troubleshoot this loop
             while (rs.next()) {
                 sessionID = rs.getInt("SessionID");
             }
@@ -349,6 +365,11 @@ public class DatabaseManager {
     }
 
 
+    /**
+     *  get test items for a given test
+     * @param  testID the ID of the test being taken
+     * @return  testItems ArrayList of TestItem
+     */
     public ArrayList<TestItem> getTestItems(int testID) {
         try ( //try t create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
