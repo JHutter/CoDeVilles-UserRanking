@@ -1,4 +1,4 @@
-package DAOclasses;
+package DaoClasses;
 
 import ContainerClasses.TestResult;
 

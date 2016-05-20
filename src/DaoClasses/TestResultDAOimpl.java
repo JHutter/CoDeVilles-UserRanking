@@ -1,7 +1,7 @@
-package DAOclasses;
+package DaoClasses;
 
 import ContainerClasses.TestResult;
-import DAOclasses.DatabaseConnection;
+import DaoClasses.DatabaseConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
