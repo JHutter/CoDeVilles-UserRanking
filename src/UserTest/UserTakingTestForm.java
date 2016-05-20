@@ -19,10 +19,14 @@ import java.util.ArrayList;
  * Date: 2016-05-03
  *
  * @author JHutter
- * @version 2016-05-03
+ * @version 2016-05-10
  *
  * Modifications: updated testtaking logic, finish/next button enabled and disabled,
  * method to write to results
+ *
+ * 2016.5.10:
+ *      Added dialog popup to prompt user login
+ *      Updated next button and item buttons
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
@@ -48,6 +52,7 @@ public class UserTakingTestForm {
         int userID = new DatabaseManager().getUserID(email);
 
         setup(userID);
+        finishButton.setText(""+session.getSessionID());
 
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
