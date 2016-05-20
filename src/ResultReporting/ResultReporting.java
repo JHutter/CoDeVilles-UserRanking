@@ -83,6 +83,8 @@ public class ResultReporting {
                 System.exit(0);//exit on cancel
             }
         });
+
+        //on click listener for button that opens results matrix
         matrixButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -238,7 +240,9 @@ public class ResultReporting {
         rankedResults.remove(highestItem);
     }
 
-
+    /**
+     * opens the results matrix in a new window
+     */
     public static void createAndShowMatrix() {
         JFrame frame = new JFrame("Results Matrix");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

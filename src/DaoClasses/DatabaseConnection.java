@@ -1,4 +1,4 @@
-package DAOclasses;
+package DaoClasses;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
