@@ -37,6 +37,7 @@ public class ResultReporting {
     private JPanel rootPanel;
     private JButton finishButton;
     private JTextArea resultList;
+    private JButton matrixButton;
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
@@ -80,6 +81,12 @@ public class ResultReporting {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);//exit on cancel
+            }
+        });
+        matrixButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                javax.swing.SwingUtilities.invokeLater(() -> createAndShowMatrix());
             }
         });
     }
@@ -229,5 +236,14 @@ public class ResultReporting {
         }
         //remove the highest ranked item from the list
         rankedResults.remove(highestItem);
+    }
+
+
+    public static void createAndShowMatrix() {
+        JFrame frame = new JFrame("Results Matrix");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(new ResultsMatrix().getRootPanel());
+        frame.pack();
+        frame.setVisible(true);
     }
 }
