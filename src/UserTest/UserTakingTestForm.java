@@ -52,7 +52,6 @@ public class UserTakingTestForm {
         int userID = new DatabaseManager().getUserID(email);
 
         setup(userID);
-        finishButton.setText(""+session.getSessionID());
 
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
