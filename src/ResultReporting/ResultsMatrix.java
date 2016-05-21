@@ -34,8 +34,8 @@ public class ResultsMatrix {
      * default constructor
      */
     public ResultsMatrix() {
-        //Set the size of the panel to agreed upon value
-        rootPanel.setPreferredSize(new Dimension(500, 350));
+        //Set the size of the panel to necessary value
+        rootPanel.setPreferredSize(new Dimension(650, 350));
 
         //instance database manager
         databaseManager = new DatabaseManager();
@@ -160,8 +160,85 @@ public class ResultsMatrix {
     public void fillResultsMatrix(){
         //reset the text box and add the header
         resultsArea.setText("");
-        resultsArea.append("UserID\tSessionID\n");
-        resultsArea.append(selectedUser + "\t" + selectedSession);
+        appendResultsHeader();
+        appendResultsRows();
+    }
+
+    /**
+     * adds the header to the results box
+     */
+    public void appendResultsHeader(){
+        //print a tab character for the first column then the name of each item
+        resultsArea.append("\t");
+        for(TestItem testItem : testItems){
+            resultsArea.append(testItem.getItemText() + "\t");
+        }
+        resultsArea.append("\n");
+    }
+
+    /**
+     * fills each row of the results box with data
+     */
+    public void appendResultsRows(){
+        //row loop
+        for (TestItem leftItem : testItems){
+            resultsArea.append(leftItem.getItemText() + "\t");
+            //column loop
+            for (TestItem topItem : testItems){
+                resultsArea.append(getStringResult(leftItem, topItem) + "\t");
+            }
+            resultsArea.append("\n");
+        }
+        resultsArea.append("Legend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
+    }
+
+    /**
+     * turns two items into a string result
+     * @param leftItem the left item in the matrix
+     * @param topItem the top item in the matrix
+     * @return a string value indicating the result of the comparison in the selected test session.
+     */
+    public String getStringResult(TestItem leftItem,TestItem topItem){
+        //left item loop
+        for(TestResult leftResult: testResults){
+            //if statement to short circuit loop
+            if(leftResult.getItemID() == leftItem.getItemID()) {
+
+                //top item loop
+                for (TestResult topResult : testResults) {
+                    //if statement to short circuit loop
+                    if(topResult.getItemID() == topItem.getItemID()){
+
+                        //if both results are part of the selected session check the question number
+                        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
+
+                            //if both results have the same question number, but not the same item id number check the result
+                            if(leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
+
+                                //print the string result based on the value in each result object
+                                //left item was selected
+                                if(leftResult.getResult() > topResult.getResult()) {
+                                    return "<";
+                                }
+                                //top item was selected
+                                else if (leftResult.getResult() < topResult.getResult()) {
+                                    return "/\\";
+                                }
+                                //neither item was selected
+                                else if (leftResult.getResult() == topResult.getResult() ){
+                                    return "0";
+
+                                }else{
+                                    //return debug value because the other comparisons should not all fail
+                                    return "Dbg2";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return " "; //return blank if no data found
     }
 
     /**
