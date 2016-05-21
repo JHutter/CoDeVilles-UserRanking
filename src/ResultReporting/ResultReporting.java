@@ -4,8 +4,10 @@ import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
+
 import DaoClasses.*;
 import SharedFunctions.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,21 +42,28 @@ public class ResultReporting {
     private JButton finishButton;
     private JTextArea resultList;
     private JButton matrixButton;
+
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
     private ArrayList<RankedItem> rankedResults;
+
     private DatabaseManager databaseManager;
+    private TestResultDAOimpl resultsManager;
+    private UserAccountDAOimpl userAccountsManager;
 
     /**
      * Default Constructor
      */
     public ResultReporting() {
-        //Set the size of the panel to necessary value
+        //Set the size of the panel to agreed upon value
         rootPanel.setPreferredSize(new Dimension(500, 350));
-        //instance the database manager
+
+        //instance the database managers
         databaseManager = new DatabaseManager();
+        resultsManager = new TestResultDAOimpl();
+        userAccountsManager = new UserAccountDAOimpl();
 
         //populate the test result list, test item list, test session list, and user account list
         testItems = new ArrayList<>();
@@ -129,7 +138,7 @@ public class ResultReporting {
      */
     public void getTestResults(){
         //populate with values from the database
-        if(!databaseManager.readAllTestResults(testResults)){
+        if(!resultsManager.readAllTestResults(testResults)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test results from database. Please check your internet connection and try again.");
             System.exit(-3);
@@ -141,7 +150,7 @@ public class ResultReporting {
      */
     public void getUserAccounts(){
         //populate with values from the database
-        if(!databaseManager.readUsersHavingResults(userAccounts)){
+        if(!userAccountsManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read user accounts from database. Please check your internet connection and try again.");
             System.exit(-4);
