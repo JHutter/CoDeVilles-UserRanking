@@ -5,7 +5,8 @@ import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 
-import DaoClasses.*;
+import DaoClasses.UserAccountDAOimpl;
+import DaoClasses.TestResultDAOimpl;
 import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
  *      results list will no longer show items with all 0's (items that have not been part of a question)
  *  2016.5.20
  *      added button to open results matrix
+ *      refactored some database functions to use Dao classes. test sessions and test items Dao not implemented yet
  *
  */
 public class ResultReporting {

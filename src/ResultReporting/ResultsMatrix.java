@@ -6,7 +6,8 @@ import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 
 import SharedFunctions.DatabaseManager;
-import DaoClasses.*;
+import DaoClasses.UserAccountDAOimpl;
+import DaoClasses.TestResultDAOimpl;
 
 import javax.swing.*;
 import java.awt.*;
