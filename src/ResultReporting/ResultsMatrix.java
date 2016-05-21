@@ -189,13 +189,56 @@ public class ResultsMatrix {
             }
             resultsArea.append("\n");
         }
+        resultsArea.append("Legend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
     }
 
     /**
      * turns two items into a string result
+     * @param leftItem the left item in the matrix
+     * @param topItem the top item in the matrix
+     * @return a string value indicating the result of the comparison in the selected test session.
      */
     public String getStringResult(TestItem leftItem,TestItem topItem){
-        return "0";
+        //left item loop
+        for(TestResult leftResult: testResults){
+            //if statement to short circuit loop
+            if(leftResult.getItemID() == leftItem.getItemID()) {
+
+                //top item loop
+                for (TestResult topResult : testResults) {
+                    //if statement to short circuit loop
+                    if(topResult.getItemID() == topItem.getItemID()){
+
+                        //if both results are part of the selected session check the question number
+                        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
+
+                            //if both results have the same question number, but not the same item id number check the result
+                            if(leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
+
+                                //print the string result based on the value in each result object
+                                //left item was selected
+                                if(leftResult.getResult() > topResult.getResult()) {
+                                    return "<";
+                                }
+                                //top item was selected
+                                else if (leftResult.getResult() < topResult.getResult()) {
+                                    return "/\\";
+                                }
+                                //neither item was selected
+                                else if (leftResult.getResult() == topResult.getResult() ){
+                                    return "0";
+
+                                }else{
+                                    //return debug value because the other comparisons should not all fail
+                                    return "Dbg2";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return " "; //return blank if no data found
     }
 
     /**
