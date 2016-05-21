@@ -34,8 +34,8 @@ public class ResultsMatrix {
      * default constructor
      */
     public ResultsMatrix() {
-        //Set the size of the panel to agreed upon value
-        rootPanel.setPreferredSize(new Dimension(500, 350));
+        //Set the size of the panel to necessary value
+        rootPanel.setPreferredSize(new Dimension(650, 350));
 
         //instance database manager
         databaseManager = new DatabaseManager();
@@ -160,8 +160,42 @@ public class ResultsMatrix {
     public void fillResultsMatrix(){
         //reset the text box and add the header
         resultsArea.setText("");
-        resultsArea.append("UserID\tSessionID\n");
-        resultsArea.append(selectedUser + "\t" + selectedSession);
+        appendResultsHeader();
+        appendResultsRows();
+    }
+
+    /**
+     * adds the header to the results box
+     */
+    public void appendResultsHeader(){
+        //print a tab character for the first column then the name of each item
+        resultsArea.append("\t");
+        for(TestItem testItem : testItems){
+            resultsArea.append(testItem.getItemText() + "\t");
+        }
+        resultsArea.append("\n");
+    }
+
+    /**
+     * fills each row of the results box with data
+     */
+    public void appendResultsRows(){
+        //row loop
+        for (TestItem leftItem : testItems){
+            resultsArea.append(leftItem.getItemText() + "\t");
+            //column loop
+            for (TestItem topItem : testItems){
+                resultsArea.append(getStringResult(leftItem, topItem) + "\t");
+            }
+            resultsArea.append("\n");
+        }
+    }
+
+    /**
+     * turns two items into a string result
+     */
+    public String getStringResult(TestItem leftItem,TestItem topItem){
+        return "0";
     }
 
     /**
