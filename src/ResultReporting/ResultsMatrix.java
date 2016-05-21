@@ -4,7 +4,10 @@ import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
+
 import SharedFunctions.DatabaseManager;
+import DaoClasses.UserAccountDAOimpl;
+import DaoClasses.TestResultDAOimpl;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +16,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Created by Student on 5/19/2016.
+ * This is the form class for result reporting in the form of a matrix.
+ * This form presents the results of tests to the user indicating each selection
+ * CIS 234A Dougherty
+ * Date created: 5/20/2016.
+ *  @author Zack
+ *  @version 2016.5.20
  */
 public class ResultsMatrix {
     private JComboBox userBox;
@@ -22,12 +30,17 @@ public class ResultsMatrix {
     private JComboBox sessionBox;
     private JTextArea resultsArea;
     private JLabel resultsLabel;
+    private JPanel rootPanel;
+
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
+
     private DatabaseManager databaseManager;
-    private JPanel rootPanel;
+    private TestResultDAOimpl resultsManager;
+    private UserAccountDAOimpl userAccountsManager;
+
     private int selectedUser, selectedSession;
 
     /**
@@ -37,8 +50,10 @@ public class ResultsMatrix {
         //Set the size of the panel to necessary value
         rootPanel.setPreferredSize(new Dimension(650, 350));
 
-        //instance database manager
+        //instance database managers
         databaseManager = new DatabaseManager();
+        resultsManager = new TestResultDAOimpl();
+        userAccountsManager = new UserAccountDAOimpl();
 
         //populate the test result list, test item list, test session list, and user account list
         userAccounts = new ArrayList<>();
@@ -84,7 +99,7 @@ public class ResultsMatrix {
      */
     public void getUserAccounts(){
         //populate with values from the database
-        if(!databaseManager.readUsersHavingResults(userAccounts)){
+        if(!userAccountsManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read user accounts from database. Please check your internet connection and try again.");
             System.exit(-4);
@@ -145,7 +160,7 @@ public class ResultsMatrix {
      */
     public void getTestResults(){
         //populate with values from the database
-        if(!databaseManager.readAllTestResults(testResults)){
+        if(!resultsManager.readAllTestResults(testResults)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test results from database. Please check your internet connection and try again.");
             System.exit(-3);

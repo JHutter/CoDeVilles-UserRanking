@@ -1,7 +1,9 @@
 package UserCreation;
 
 import ContainerClasses.UserAccount;
-import SharedFunctions.DatabaseManager;
+
+import DaoClasses.UserAccountDAOimpl;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +18,7 @@ import java.awt.event.ActionListener;
  * Date Created: 4/19/2016
  *
  *  @author  Zack
- *  @version  2016.5.16
+ *  @version  2016.5.20
  *
  *  2016.4.29
  *      reduced number of pop-ups generated
@@ -30,6 +32,10 @@ import java.awt.event.ActionListener;
  *      added emailField.requestFocus() call at form open
  *      added .requestFocus() calls to input validation methods
  *
+ *  2016.5.20
+ *      refactored database functions to use Dao classes instead of database manager
+ *      removed database manager and all references
+ *
  */
 
 public class UserAccountSetup {
@@ -42,8 +48,10 @@ public class UserAccountSetup {
     private JButton cancelButton;
     private JLabel errorLabel;
     private JLabel errorFlagLabel;
+
     private UserAccount account;
-    private DatabaseManager databaseManager;
+
+    private UserAccountDAOimpl userAccountsManager;
 
 
     /**
@@ -54,7 +62,7 @@ public class UserAccountSetup {
         rootPanel.setPreferredSize(new Dimension(500,350));
 
         //instance the database manager
-        databaseManager = new DatabaseManager();
+        userAccountsManager = new UserAccountDAOimpl();
 
         //on click listener for finish button
         finishButton.addActionListener(new ActionListener() {
@@ -67,7 +75,7 @@ public class UserAccountSetup {
                     account = new UserAccount(emailField.getText(), nameField.getText(), passField1.getText());
 
                     //call database manager and attempt to insert account. If email is not unique then database will error.
-                    if (databaseManager.insertUserAccount(account)){
+                    if (userAccountsManager.insertUserAccount(account)){
                         //show confirmation message if insert succeeds
                         JOptionPane.showMessageDialog(rootPanel, "Created account for " + account.getName() +
                                 "\nemail: " + account.getEmail() +

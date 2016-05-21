@@ -4,12 +4,15 @@ import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
+
+import DaoClasses.UserAccountDAOimpl;
+import DaoClasses.TestResultDAOimpl;
 import SharedFunctions.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +21,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.5.16
+ *  @version 2016.5.20
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
@@ -30,6 +33,9 @@ import java.util.ArrayList;
  *
  *  2016.5.16
  *      results list will no longer show items with all 0's (items that have not been part of a question)
+ *  2016.5.20
+ *      added button to open results matrix
+ *      refactored some database functions to use Dao classes. test sessions and test items Dao not implemented yet
  *
  */
 public class ResultReporting {
@@ -38,21 +44,28 @@ public class ResultReporting {
     private JButton finishButton;
     private JTextArea resultList;
     private JButton matrixButton;
+
     private ArrayList<UserAccount> userAccounts;
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
     private ArrayList<RankedItem> rankedResults;
+
     private DatabaseManager databaseManager;
+    private TestResultDAOimpl resultsManager;
+    private UserAccountDAOimpl userAccountsManager;
 
     /**
      * Default Constructor
      */
     public ResultReporting() {
-        //Set the size of the panel to necessary value
+        //Set the size of the panel to agreed upon value
         rootPanel.setPreferredSize(new Dimension(500, 350));
-        //instance the database manager
+
+        //instance the database managers
         databaseManager = new DatabaseManager();
+        resultsManager = new TestResultDAOimpl();
+        userAccountsManager = new UserAccountDAOimpl();
 
         //populate the test result list, test item list, test session list, and user account list
         testItems = new ArrayList<>();
@@ -127,7 +140,7 @@ public class ResultReporting {
      */
     public void getTestResults(){
         //populate with values from the database
-        if(!databaseManager.readAllTestResults(testResults)){
+        if(!resultsManager.readAllTestResults(testResults)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test results from database. Please check your internet connection and try again.");
             System.exit(-3);
@@ -139,7 +152,7 @@ public class ResultReporting {
      */
     public void getUserAccounts(){
         //populate with values from the database
-        if(!databaseManager.readUsersHavingResults(userAccounts)){
+        if(!userAccountsManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read user accounts from database. Please check your internet connection and try again.");
             System.exit(-4);
