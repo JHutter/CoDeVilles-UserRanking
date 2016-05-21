@@ -13,7 +13,12 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
- * Created by Student on 5/19/2016.
+ * This is the form class for result reporting in the form of a matrix.
+ * This form presents the results of tests to the user indicating each selection
+ * CIS 234A Dougherty
+ * Date created: 5/20/2016.
+ *  @author Zack
+ *  @version 2016.5.20
  */
 public class ResultsMatrix {
     private JComboBox userBox;

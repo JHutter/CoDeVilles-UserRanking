@@ -4,12 +4,12 @@ import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
+import DaoClasses.*;
 import SharedFunctions.DatabaseManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 /**
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.5.16
+ *  @version 2016.5.20
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
@@ -30,6 +30,8 @@ import java.util.ArrayList;
  *
  *  2016.5.16
  *      results list will no longer show items with all 0's (items that have not been part of a question)
+ *  2016.5.20
+ *      added button to open results matrix
  *
  */
 public class ResultReporting {
