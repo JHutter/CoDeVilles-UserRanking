@@ -1,25 +1,27 @@
 package AdminSetup;
 
 /**
- * The MainAdminSetup class is made to launch the admin setup GUI screen
+ * The MainAdminSetup class is made to launch initial GUI screen of admin setup part
  * Create Date 4/18/2016
  *
  * @author   Jinsook Lee
- * @version  4/24/2016
+ * @version  5/24/2016
+ *
+ * Modification
+ * 5/24/2016
+ * - Update to launch TestsetChoiceForm GUI screen
  */
-
-import ContainerClasses.UserAccount;
-
 import javax.swing.*;
-import java.util.ArrayList;
+
 
 public class MainAdminSetup {
 
     public static void createAndShowGui(){
 
+
         JFrame frame = new JFrame("Admin Setup");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new AdminSetupForm().getRootPanel());
+        frame.getContentPane().add(new TestsetChoiceForm().getRootPanel());
         frame.pack();
         frame.setVisible(true);
     }

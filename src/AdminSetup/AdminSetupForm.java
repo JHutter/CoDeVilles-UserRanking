@@ -2,6 +2,10 @@ package AdminSetup;
 
 import ContainerClasses.TestItem;
 import ContainerClasses.TestSession;
+import DaoClasses.DAOFactory;
+import DaoClasses.DatabaseConnection;
+import DaoClasses.TestItemDAO;
+import DaoClasses.TestItemDAOimpl;
 import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
@@ -32,6 +36,10 @@ import java.lang.String;
  * 05/11/2016
  * - Add checkListSelected method to disable delete button if there's nothing selected
  * - Update isValidLength method to remove function to wiping out a user's entry after check length of item text
+ * 05/24/2016
+ * - Add fields, tItemDAO, testID
+ * - Update addItem, deleteItem method to use DAO to handling DB
+ * - Update constructor to get TestID as parameter
  */
 
 public class AdminSetupForm {
@@ -49,25 +57,28 @@ public class AdminSetupForm {
     private ArrayList<TestSession> testSessions;
     private DefaultListModel listModel = new DefaultListModel();
     private TestItem tItem;
+    private int testID;
 
     /**
      *  Constructor
      */
-    public AdminSetupForm(){
-
+    public AdminSetupForm(int num){
+        //JOptionPane.showMessageDialog(rootPanel, num);
+        TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
         rootPanel.setPreferredSize(new Dimension(500,350));     // set size of window
-
-        databaseManager = new DatabaseManager();    //create instance of DatabaseManager
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
         testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
 
+        databaseManager = new DatabaseManager();    //create instance of DatabaseManager
+
+        testID=num;     //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
+
         getSessions();
         getItems();
-
         showItemList();
         ckeckTakenTest();
-        checkItemNumber();
+        //checkItemNumber();
         checkListSelected();
 
         addButton.addActionListener(new ActionListener() {
@@ -108,14 +119,18 @@ public class AdminSetupForm {
      * Get item list array from DatabaseManager class
      */
     public void getItems(){
-        if(!databaseManager.readAllTestItems(testItems)){
-            JOptionPane.showMessageDialog(rootPanel, "Fail to read test items");
-        }
+        TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
+//        if(!tItemDAO.readAllTestItems(testItems)){
+//        //if(!databaseManager.readAllTestItems(testItems)){
+//            JOptionPane.showMessageDialog(rootPanel, "Fail to read test items");
+//        }
+        testItems =tItemDAO.getTestItems(testID);
     }
 
     /**
      * Get session list array from DatabaseManager class
      */
+    //will be updated to use DAO
     public void getSessions(){
         if(!databaseManager.readAllTestSessions(testSessions)){
             JOptionPane.showMessageDialog(rootPanel, "Fail to read test sessions");
@@ -136,10 +151,12 @@ public class AdminSetupForm {
      * Add button add input item to DB
      */
     public void addItem() {
+        TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
         if (isValidLength())     //item is valid length
             if (!isDuplicate() && isValidLength()) {       //item is not duplicated
-                tItem = new TestItem(1, itemTextField.getText());
-                if (!databaseManager.insertTestItem(tItem)) {
+                tItem = new TestItem(testID, itemTextField.getText());
+                if (!tItemDAO.insertTestItem(tItem)) {
+                //if (!databaseManager.insertTestItem(tItem)) {
                     JOptionPane.showMessageDialog(rootPanel, "Failed to add item to database.");
                     itemTextField.requestFocus();
                 } else {                                                                       //query is executed query without error
@@ -158,9 +175,11 @@ public class AdminSetupForm {
      * Delete button delete the selected item from DB
      */
     public void deleteItem() {
+        TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
         if(isListSelected()){
-            tItem = new TestItem(1, (String) itemList.getSelectedValue());
-            if (!databaseManager.deleteTestItem(tItem)) {   //query is executed query without error
+            tItem = new TestItem(testID, (String) itemList.getSelectedValue());
+            if (!tItemDAO.deleteTestItem(tItem)) {
+                //if (!testItemDAO.deleteTestItem(tItem)) {   //query is executed query without error
                 JOptionPane.showMessageDialog(rootPanel, "Failed to delete user accounts from database.");
             }else{
                 listModel.remove(itemList.getSelectedIndex());      //the item is removed from the list
@@ -191,7 +210,7 @@ public class AdminSetupForm {
             JOptionPane.showMessageDialog(rootPanel, "Fail to read test items from database.");
         }
         else{
-          if (testSessions.size() > 10) {        // please change here to "if (testSessions.size() > 0) " to test ckeckTakenTest method
+          if (testSessions.size() > 100) {        // please change here to "if (testSessions.size() > 0) " to test ckeckTakenTest method
               addButton.setEnabled(false);
               deleteButton.setEnabled(false);
               cancelButton.setEnabled(false);
@@ -258,7 +277,6 @@ public class AdminSetupForm {
      *  Check list is selected to delete
      *  @return  boolean if list is selected return true
      */
-
     private boolean isListSelected()
     {
         if (itemList.getSelectedIndex() == -1)      //no item is selected in the list
