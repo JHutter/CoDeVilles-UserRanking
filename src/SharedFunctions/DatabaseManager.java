@@ -3,11 +3,7 @@ package SharedFunctions;
 import ContainerClasses.*;
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -34,6 +30,11 @@ import java.util.ArrayList;
  * 
  *  2016.5.16
  *      Added clause to GET_USERS_HAVING_RESULTS_SQL to oder accounts alphabetically by email address
+ *
+ *  2016.5.24
+ *      Added insertGetTest method
+ *      Added clause to INSERT_NEW_TEST_SQL
+ *
  */
 public class DatabaseManager {
     //begin database information strings
@@ -66,7 +67,7 @@ public class DatabaseManager {
     private static final String GET_USER_ID_SQL = "SELECT UserID from USERACCOUNTS WHERE Email = ?";
     private static final String INSERT_NEW_SESSION_SQL = "INSERT INTO TESTSESSIONS (UserID, TestID, isActive) values (?, ?, 0)";
     private static final String GET_SESSION_SQL = "SELECT SessionID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
-
+    private static final String INSERT_NEW_TEST_SQL = "INSERT INTO TESTS (TestName) values (?)";
 
     //begin database functions
     /**
@@ -471,6 +472,40 @@ public class DatabaseManager {
             return -1;
         }
     }
+
+    public int insertGetTest(String testName){
+        int id;
+        try ( //try to create a database connection
+              Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+              PreparedStatement stmt = connection.prepareStatement(INSERT_NEW_TEST_SQL,
+                      Statement.RETURN_GENERATED_KEYS);
+        ){
+            stmt.setString(1, testName);
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating test set failed.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    //user.setId(generatedKeys.getLong(1));
+                    id = generatedKeys.getInt(1);
+                    //return id;
+                }
+                else {
+                    throw new SQLException("Creating test set failed.");
+                }
+            }
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+        return id;
+    }
+
 
 
 }
