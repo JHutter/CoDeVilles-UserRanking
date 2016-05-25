@@ -5,8 +5,12 @@ package ContainerClasses;
  * CIS 234A Dougherty
  * Creation Date: 4/22/2016.
  *
- *  @author Zack
- *  @version 2016.4.22
+ *  @author Zack, JoAnne
+ *  @version 2016.5.24
+ *
+ *  Modifications:
+ *  2016.5.24:
+ *      Added another constructor with single parameter testID
  */
 public class Test {
     private int testID;
@@ -58,12 +62,21 @@ public class Test {
         testName = newTestName;
     }
     /**
-     * Constructor with one parameter
+     * Constructor with one parameter, testName
      * The ID number for the new test is unneeded because it is normally assigned by the database
      * @param newTestName The name of the new test
      */
     public Test(String newTestName) {
         testID = 0;
         testName = newTestName;
+    }
+
+    /**
+     * Constructor with one parameter, testID
+     * @param newTestID the ID for the test
+     */
+    public Test(int newTestID){
+        testID = newTestID;
+        testName = "";
     }
 }

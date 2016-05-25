@@ -4,12 +4,20 @@ import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import SharedFunctions.DatabaseManager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 /**
- * Created by JHutter on 4/26/2016.
+ * This class models single user account.
+ * CIS 234A Dougherty
+ * Creation Date: 4/26/2016
+ *
+ *  @author JoAnne
+ *  @version 2016.5.24
+ *
+ *  Modifications:
+ *  2016.5.24:
+ *      Fixed bug in constructor
+ *      Added recentItems and checkRecentItems for sprint2 (item ordering story)
  */
 public class Test extends ContainerClasses.Test{
     /* fields */
@@ -21,12 +29,18 @@ public class Test extends ContainerClasses.Test{
     private ArrayList<ItemPair> pairs;
     private DatabaseManager database;
     private ArrayList<TestResult> results;
+    private ArrayList<TestItem> recentItems;
 
 
-    /* constructor */
+    /* constructors */
+
+    /**
+     * Constructor with one parameter testID
+     * @param testID the ID of the new test
+     */
     public Test(int testID) {
         currentTurn = 0;
-        this.testID = testID;
+        setTestID(testID);
         items = new ArrayList<TestItem>();
         DatabaseManager database = new DatabaseManager();
         setDBItems(database.getTestItems(testID));
@@ -35,9 +49,34 @@ public class Test extends ContainerClasses.Test{
         }
 
         results = new ArrayList<>();
-        /* TODO add field (collection of some sort) for recording scores */
     }
 
+    /**
+     * Constructor with two parameters, testID and testName
+     * @param testID the ID of the test
+     * @param testName the name of the test
+     */
+    public Test(int testID, String testName) {
+        currentTurn = 0;
+        setTestID(testID);
+        items = new ArrayList<TestItem>();
+        DatabaseManager database = new DatabaseManager();
+        setDBItems(database.getTestItems(testID));
+        if (itemTotal == 0) {
+            setBackupItems();
+        }
+
+        results = new ArrayList<>();
+    }
+
+    /* methods */
+    /**
+     * generateItemPairs
+     * method that given a list of items, shuffles them to create a list
+     * of item pairs that matches every item against every other item
+     * @param items the list of TestITems
+     * @return a list of shuffled ItemPairs
+     */
     private ArrayList<ItemPair> generateItemPairs(ArrayList<TestItem> items) {
         ArrayList<ItemPair> generatedPairs = new ArrayList<ItemPair>();
         for (int outer = 0; outer < itemTotal-1; outer++) {
@@ -51,13 +90,21 @@ public class Test extends ContainerClasses.Test{
         return generatedPairs;
     }
 
-
-    /* methods */
+    /**
+     * getItems
+     * returns the list of TestItems
+     * @return list of TestItems
+     */
     public ArrayList<TestItem> getItems() {
         //return database.getTestItems(testID);
         return items;
     }
 
+    /**
+     * setBackupItems
+     * sets a list of dummy testItems
+     * for testing, not production use
+     */
     public void setBackupItems() {
         ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Tablet", "PC - Windows", "PC - Mac", "Smartphone", "Raspberry Pi"));
         int testID = 0;
@@ -73,6 +120,11 @@ public class Test extends ContainerClasses.Test{
     }
 
 
+    /**
+     * setDBItems
+     * given a list of testItems from the DB, set those items and generate pairs
+     * @param testItems
+     */
     public void setDBItems(ArrayList<TestItem> testItems){
         /*for (TestItem item : items = testItems) {
             items.add(item);
@@ -86,15 +138,30 @@ public class Test extends ContainerClasses.Test{
         //items.addAll(testItems);
     }
 
+    /**
+     * incrementTurn
+     * increases the current turn
+     */
     public void incrementTurn() {
         if (currentTurn < turnTotal) {
             currentTurn++;
         }
     }
 
+    /**
+     * getCurrentTurn
+     * getter for currentTurn
+     * @return currentTurn
+     */
     public int getCurrentTurn() {
         return currentTurn;
     }
+
+    /**
+     * getTotalTurn
+     * getter for turnTotal
+     * @return turnTotal, the total number of turns
+     */
     public int getTotalTurn() {
         return turnTotal;
     }
@@ -105,10 +172,21 @@ public class Test extends ContainerClasses.Test{
         return pairs.get(turnTotal);
     }
 
+    /**
+     * getPairs
+     * getter for list of ItemPairs
+     * @return pairs, list of ItemPairs
+     */
     public ArrayList<ItemPair> getPairs() {
         return pairs;
     }
 
+    /**
+     * getItemByText
+     * getter for item, given a particular text and return the item with that text
+     * @param text, the text of the item
+     * @return
+     */
     public TestItem getItemByText(String text) {
         for (TestItem item : items) {
             if (text.equals(item.getItemText())) {
@@ -118,20 +196,81 @@ public class Test extends ContainerClasses.Test{
         return null;
     }
 
+    /**
+     * recordResult
+     * given the result information, add that result to the list of TestResults
+     * @param newQuestionNumber, first itemID
+     * @param newItemID, second itemID, which newQuestionNumber was matched against
+     * @param newSessionID, the ID of the test session
+     * @param newResult, the result of the matchup
+     */
     public void recordResult(int newQuestionNumber, int newItemID, int newSessionID, int newResult) {
         results.add(new TestResult(newQuestionNumber, newItemID, newSessionID, newResult));
 
     }
 
+    /**
+     * writeResults
+     * write the list of TestResults to the database after the test
+     */
     public void writeResults() {
         database = new DatabaseManager();
         for (TestResult result : results) {
             database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
         }
     }
+
+    /**
+     * getResults
+     * getter for list of TestResults
+     * @return list of TestResults
+     */
     public ArrayList<TestResult> getResults() {
         return results;
     }
+
+    /**
+     * setRecentItems
+     * clears the recent items list
+     * adds the 2 items from the last turn the recent items list
+     * @param itemPair
+     */
+    public void setRecentItems(ItemPair itemPair) {
+        recentItems.clear();
+        recentItems.add(itemPair.getItem1());
+        recentItems.add(itemPair.getItem2());
+    }
+
+    /**
+     * checkRecentItems
+     * using the current turn and recent items,
+     * checks the item pair at the index of current turn
+     * if the current turn == total turns or first turn, do nothing
+     * else check the
+     */
+    public void checkRecentItems(){
+        if (currentTurn == 0 || currentTurn == turnTotal){
+            return;
+        }
+        else {
+            // check the itemPair at index currentTurn
+            int shuffleCount = 0;
+            while (recentItems.contains(pairs.get(currentTurn).getItem1()) ||
+                    recentItems.contains(pairs.get(currentTurn).getItem2())){
+                shuffleSubList(currentTurn, turnTotal);
+                shuffleCount++;
+                if (shuffleCount == 5) { // if we haven't gotten a fresh pair yet, don't keep shuffling
+                    break;
+                }
+
+            }
+        }
+    }
+
+    private void shuffleSubList(int start, int stop){
+        Collections.shuffle(pairs.subList(start, start));
+    }
+
 
 
 }

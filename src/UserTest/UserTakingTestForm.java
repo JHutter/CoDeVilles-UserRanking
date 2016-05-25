@@ -16,10 +16,10 @@ import java.util.ArrayList;
  * Description: Form for user taking test story
  *
  * Programmer: JoAnne Hutter
- * Date: 2016-05-03
+ * Created: 2016-05-03
  *
  * @author JHutter
- * @version 2016-05-10
+ * @version 2016-05-24
  *
  * Modifications: updated testtaking logic, finish/next button enabled and disabled,
  * method to write to results
@@ -27,6 +27,9 @@ import java.util.ArrayList;
  * 2016.5.10:
  *      Added dialog popup to prompt user login
  *      Updated next button and item buttons
+ * 2016.5.24:
+ *      Fixed problem with testID, problem with password
+ *      Insert session fixed
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
@@ -44,14 +47,13 @@ public class UserTakingTestForm {
     private JOptionPaneMultiple dialogBox;
 
     public UserTakingTestForm() {
-        //database = new DatabaseManager();
-        //String path = JOptionPane.showInputDialog(rootPanel, "Enter a path");
         dialogBox = new JOptionPaneMultiple();
-
         String email = dialogBox.getEmail();
-        int userID = new DatabaseManager().getUserID(email);
+        String password = dialogBox.getPassword();
+        int userID = new DatabaseManager().getUserID(email, password);
 
         setup(userID);
+        //finishButton.setText(""+session.getSessionID());
 
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
@@ -131,22 +133,48 @@ public class UserTakingTestForm {
         return rootPanel;
     }
 
+    /**
+     * toggleItemButtonColor
+     * mark which item/button is currently selected by making it light gray
+     * all other buttons are set to default color
+     * @param buttonClicked the selected button
+     * @param buttonOther not the selected button
+     * @param buttonOtherOther not the selected button
+     */
     private void toggleItemButtonColor(JButton buttonClicked, JButton buttonOther, JButton buttonOtherOther) {
         // JButton().getBackground idea thanks to http://stackoverflow.com/questions/1358398/how-to-get-jbutton-default-background-color
         buttonClicked.setBackground(Color.lightGray);
         buttonOther.setBackground(new JButton().getBackground());
         buttonOtherOther.setBackground(new JButton().getBackground());
     }
+
+    /**
+     * setSelectedItem
+     * setter to mark which item/button is currently selected
+     * @param button
+     */
     private void setSelectedItem(JButton button) {
         selectedItem = button;
     }
 
+    /**
+     * setNewItemPairs
+     * for the next turn, get the item buttons
+     * @param nextTurn the next turn in the test
+     */
     private void setNewItemPairs(int nextTurn) {
         ItemPair nextPair = test.getNextPair(nextTurn);
         itemAButton.setText(nextPair.getItem1().getItemText());
         itemBButton.setText(nextPair.getItem2().getItemText());
     }
 
+    /**
+     * resultItemButtonColors
+     * when the turn resets, change the buttons back to their default colors
+     * @param button1
+     * @param button2
+     * @param button3
+     */
     private void resetItemButtonColors(JButton button1, JButton button2, JButton button3) {
         // JButton().getBackground idea thanks to http://stackoverflow.com/questions/1358398/how-to-get-jbutton-default-background-color
         button1.setBackground(new JButton().getBackground());
@@ -154,33 +182,59 @@ public class UserTakingTestForm {
         button3.setBackground(new JButton().getBackground());
     }
 
+    /**
+     * setup
+     * set the test and test session up for a given user
+     * @param userID
+     */
     private void setup(int userID) {
         test = new Test(1);
         user = new UserAccount();
         user.setUserID(userID);
         session = new TestSession(test.getTestID(), user.getUserID(), true);
         database = new DatabaseManager();
-        //database.insertSession(user.getUserID(), test.getTestID());
+        database.insertSession(user.getUserID(), test.getTestID());
+
+
+
         session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
         //session.setSessionID(3);
         database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
         return;
     }
 
+    /**
+     * finishTest
+     * change button to indicate to user that the test is finished
+     * and call test.writeResults to record results in the database
+     */
     private void finishTest() {
         // write results to database iteratively
         finishButton.setText("Test is complete.\nPlease close this window to finish.");
         test.writeResults();
     }
 
+    /**
+     * enableFinishButton
+     * mark the finishButton as enabled to
+     * allow test taker to progress with the test
+     */
     private void enableFinishButton() {
         finishButton.setEnabled(true);
         return;
     }
+
+    /**
+     * disableFinishButton
+     * mark the finishButton as disabled to force test taker
+     * to make a selection before continuing
+     */
     private void disableFinishButton() {
         finishButton.setEnabled(false);
         return;
     }
+
+
 }
 
 

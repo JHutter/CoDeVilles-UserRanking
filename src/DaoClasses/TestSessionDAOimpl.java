@@ -101,7 +101,7 @@ public class TestSessionDAOimpl implements TestSessionDAO {
             stmt.setInt(1, userID);
             stmt.setInt(2, testID);
             ResultSet rs = stmt.executeQuery();
-            int sessionID = 3; // TODO troubleshoot this loop
+            int sessionID = 0;
             while (rs.next()) {
                 sessionID = rs.getInt("SessionID");
             }
