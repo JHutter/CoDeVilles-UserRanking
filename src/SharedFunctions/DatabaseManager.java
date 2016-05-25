@@ -64,7 +64,7 @@ public class DatabaseManager {
                                                                 "and UserID = ? and  TestID = ?";
     private static final String INSERT_RESULT_SQL = "INSERT INTO TESTRESULTS (QuestionNumber, ItemID, SessionID, Result)" +
                                                                 " values (?, ?, ?, ?)";
-    private static final String GET_USER_ID_SQL = "SELECT UserID from USERACCOUNTS WHERE Email = ?";
+    private static final String GET_USER_ID_SQL = "SELECT UserID from USERACCOUNTS WHERE Email = ? and Pass = ?";
     private static final String INSERT_NEW_SESSION_SQL = "INSERT INTO TESTSESSIONS (UserID, TestID, isActive) values (?, ?, 0)";
     private static final String GET_SESSION_SQL = "SELECT SessionID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
     private static final String INSERT_NEW_TEST_SQL = "INSERT INTO TESTS (TestName) values (?)";
@@ -453,13 +453,14 @@ public class DatabaseManager {
      * @param email String, the email of the user
      * @return userID int, the userID that matches the email provided
      */
-    public int getUserID(String email) {
+    public int getUserID(String email, String password) {
         try ( //try t create a database connection
               Connection connection =  DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
               PreparedStatement stmt = connection.prepareStatement(GET_USER_ID_SQL);
         ){
             int userID = -1;
             stmt.setString(1, email);
+            stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 userID = rs.getInt("UserID");

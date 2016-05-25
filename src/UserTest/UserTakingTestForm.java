@@ -16,10 +16,10 @@ import java.util.ArrayList;
  * Description: Form for user taking test story
  *
  * Programmer: JoAnne Hutter
- * Date: 2016-05-03
+ * Created: 2016-05-03
  *
  * @author JHutter
- * @version 2016-05-10
+ * @version 2016-05-24
  *
  * Modifications: updated testtaking logic, finish/next button enabled and disabled,
  * method to write to results
@@ -27,6 +27,9 @@ import java.util.ArrayList;
  * 2016.5.10:
  *      Added dialog popup to prompt user login
  *      Updated next button and item buttons
+ * 2016.5.24:
+ *      Fixed problem with testID, problem with password
+ *      Insert session fixed
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
@@ -44,14 +47,13 @@ public class UserTakingTestForm {
     private JOptionPaneMultiple dialogBox;
 
     public UserTakingTestForm() {
-        //database = new DatabaseManager();
-        //String path = JOptionPane.showInputDialog(rootPanel, "Enter a path");
         dialogBox = new JOptionPaneMultiple();
-
         String email = dialogBox.getEmail();
-        int userID = new DatabaseManager().getUserID(email);
+        String password = dialogBox.getPassword();
+        int userID = new DatabaseManager().getUserID(email, password);
 
         setup(userID);
+        //finishButton.setText(""+session.getSessionID());
 
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
@@ -160,7 +162,10 @@ public class UserTakingTestForm {
         user.setUserID(userID);
         session = new TestSession(test.getTestID(), user.getUserID(), true);
         database = new DatabaseManager();
-        //database.insertSession(user.getUserID(), test.getTestID());
+        database.insertSession(user.getUserID(), test.getTestID());
+
+
+
         session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
         //session.setSessionID(3);
         database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
