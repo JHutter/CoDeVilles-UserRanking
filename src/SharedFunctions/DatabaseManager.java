@@ -451,6 +451,7 @@ public class DatabaseManager {
     /**
      * Add test results to database
      * @param email String, the email of the user
+     * @param password String, the password the user entered
      * @return userID int, the userID that matches the email provided
      */
     public int getUserID(String email, String password) {
