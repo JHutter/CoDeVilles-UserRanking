@@ -10,8 +10,12 @@ import java.util.ArrayList;
  * This class implements the methods in the UserAccountDAO class
  * CIS 234A Dougherty
  * Date created: 5/19/2016.
- *  @author Zack
- *  @version 2016.5.19
+ *  @author Zack, JoAnne
+ *  @version 2016.5.24
+ *
+ *  Modifications
+ *  2016.5.24
+ *      Added getUserID
  */
 public class UserAccountDAOimpl implements UserAccountDAO {
     //fields
@@ -26,6 +30,7 @@ public class UserAccountDAOimpl implements UserAccountDAO {
             "WHERE TESTSESSIONS.SessionID = TESTRESULTS.SessionID)) " +
             "ORDER BY Email";
     private static final String INSERT_NEW_USER_ACCOUNT_SQL = "INSERT INTO USERACCOUNTS (Email, Name, Pass) VALUES (?,?,?)";
+    private static final String GET_USER_ID_SQL = "SELECT UserID from USERACCOUNTS WHERE Email = ? and Pass = ?";
 
     //methods
     /**
@@ -122,6 +127,33 @@ public class UserAccountDAOimpl implements UserAccountDAO {
 
             return true; //return true for success
         }else{return false;}
+    }
+
+    /**
+     * Add test results to database
+     * @param email String, the email of the user
+     * @param password String, the password the user entered
+     * @return userID int, the userID that matches the email provided
+     */
+    public int getUserID(String email, String password) {
+        try ( //try t create a database connection
+              Connection connection =  databaseConnection.getConnection();
+              PreparedStatement stmt = connection.prepareStatement(GET_USER_ID_SQL);
+        ){
+            int userID = -1;
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                userID = rs.getInt("UserID");
+            }
+            return userID;
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     public UserAccountDAOimpl(){
