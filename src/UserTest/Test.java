@@ -17,6 +17,7 @@ import java.util.*;
  *  Modifications:
  *  2016.5.24:
  *      Fixed bug in constructor
+ *      Added recentItems and checkRecentItems for sprint2 (item ordering story)
  */
 public class Test extends ContainerClasses.Test{
     /* fields */
@@ -227,6 +228,38 @@ public class Test extends ContainerClasses.Test{
     public ArrayList<TestResult> getResults() {
         return results;
     }
+
+    /**
+     * setRecentItems
+     * clears the recent items list
+     * adds the 2 items from the last turn the recent items list
+     * @param itemPair
+     */
+    public void setRecentItems(ItemPair itemPair) {
+        recentItems.clear();
+        recentItems.add(itemPair.getItem1());
+        recentItems.add(itemPair.getItem2());
+    }
+
+    /**
+     * checkRecentItems
+     * using the current turn and recent items,
+     * checks the item pair at the index of current turn
+     * if the current turn == total turns or first turn, do nothing
+     * else check the
+     */
+    public void checkRecentItems(){
+        if (currentTurn == 0 || currentTurn == turnTotal){
+            return;
+        }
+        else {
+            // check the itemPair at index currentTurn
+            // if the items aren't in recent items, do nothing
+            // if the items are in recent items,
+            // swap the ItemPair at currentIndex with a random index that is greater than current
+        }
+    }
+
 
 
 }
