@@ -254,10 +254,21 @@ public class Test extends ContainerClasses.Test{
         }
         else {
             // check the itemPair at index currentTurn
-            // if the items aren't in recent items, do nothing
-            // if the items are in recent items,
-            // swap the ItemPair at currentIndex with a random index that is greater than current
+            int shuffleCount = 0;
+            while (recentItems.contains(pairs.get(currentTurn).getItem1()) ||
+                    recentItems.contains(pairs.get(currentTurn).getItem2())){
+                shuffleSubList(currentTurn, turnTotal);
+                shuffleCount++;
+                if (shuffleCount == 5) { // if we haven't gotten a fresh pair yet, don't keep shuffling
+                    break;
+                }
+
+            }
         }
+    }
+
+    private void shuffleSubList(int start, int stop){
+        Collections.shuffle(pairs.subList(start, start));
     }
 
 

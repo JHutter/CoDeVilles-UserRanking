@@ -234,15 +234,7 @@ public class UserTakingTestForm {
         return;
     }
 
-    /** findNextItemNotContaining
-     * start at current index, check if each itemPair has either of recent items
-     * increment, then stop when a pair doesn't have them
-     * or stop at turnTotal
-     * @return
-     */
-    private int findNextItemNotContaining(){
-        return 0;
-    }
+
 }
 
 
