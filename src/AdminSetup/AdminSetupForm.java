@@ -2,11 +2,7 @@ package AdminSetup;
 
 import ContainerClasses.TestItem;
 import ContainerClasses.TestSession;
-import DaoClasses.DAOFactory;
-import DaoClasses.DatabaseConnection;
-import DaoClasses.TestItemDAO;
-import DaoClasses.TestItemDAOimpl;
-import SharedFunctions.DatabaseManager;
+import DaoClasses.*;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -40,6 +36,8 @@ import java.lang.String;
  * - Add fields, tItemDAO, testID
  * - Update addItem, deleteItem method to use DAO to handling DB
  * - Update constructor to get TestID as parameter
+ *
+ * - Use DAO to get session data
  */
 
 public class AdminSetupForm {
@@ -51,8 +49,6 @@ public class AdminSetupForm {
     private JButton finishButton;
     private JButton cancelButton;
     private JLabel takenLabel;
-
-    private DatabaseManager databaseManager;
     private ArrayList<TestItem> testItems;
     private ArrayList<TestSession> testSessions;
     private DefaultListModel listModel = new DefaultListModel();
@@ -64,13 +60,11 @@ public class AdminSetupForm {
      */
     public AdminSetupForm(int num){
         //JOptionPane.showMessageDialog(rootPanel, num);
-        TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
+        //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
         rootPanel.setPreferredSize(new Dimension(500,350));     // set size of window
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
         testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
-
-        databaseManager = new DatabaseManager();    //create instance of DatabaseManager
 
         testID=num;     //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
 
@@ -116,7 +110,7 @@ public class AdminSetupForm {
     }
 
     /**
-     * Get item list array from DatabaseManager class
+     * Get item list array from TestItemDAO
      */
     public void getItems(){
         TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
@@ -128,11 +122,12 @@ public class AdminSetupForm {
     }
 
     /**
-     * Get session list array from DatabaseManager class
+     * Get session list array from TestSessionDAO
      */
     //will be updated to use DAO
     public void getSessions(){
-        if(!databaseManager.readAllTestSessions(testSessions)){
+        TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
+        if(!tSessionDAO.readAllTestSessions(testSessions)){
             JOptionPane.showMessageDialog(rootPanel, "Fail to read test sessions");
         }
     }
@@ -156,7 +151,6 @@ public class AdminSetupForm {
             if (!isDuplicate() && isValidLength()) {       //item is not duplicated
                 tItem = new TestItem(testID, itemTextField.getText());
                 if (!tItemDAO.insertTestItem(tItem)) {
-                //if (!databaseManager.insertTestItem(tItem)) {
                     JOptionPane.showMessageDialog(rootPanel, "Failed to add item to database.");
                     itemTextField.requestFocus();
                 } else {                                                                       //query is executed query without error
@@ -206,7 +200,8 @@ public class AdminSetupForm {
      * Check weather test is taken or not. After any user takes test, item can not be changed
      */
     public void ckeckTakenTest(){
-        if(!databaseManager.readAllTestSessions(testSessions)){
+        TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
+        if(!tSessionDAO.readAllTestSessions(testSessions)){
             JOptionPane.showMessageDialog(rootPanel, "Fail to read test items from database.");
         }
         else{
