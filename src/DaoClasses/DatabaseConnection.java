@@ -13,6 +13,7 @@ import java.sql.SQLException;
  *  @version 2016.5.19
  */
 public class DatabaseConnection {
+
     //begin fields
     Connection connection;
     boolean status;

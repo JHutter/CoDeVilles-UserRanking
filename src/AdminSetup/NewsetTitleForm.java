@@ -4,7 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import SharedFunctions.DatabaseManager;
+
+import DaoClasses.DAOFactory;
+import DaoClasses.TestDAO;
 
 /**
  * The NewsetTitleForm class is made to control NewsetTitleForm GUI screen.
@@ -13,20 +15,20 @@ import SharedFunctions.DatabaseManager;
  *
  * @author   Jinsook Lee
  * @version  05/24/2016
+ *
+ * Modification
+ * - Use DAO to insert new test
  */
 
 public class NewsetTitleForm {
     private JPanel rootPanel2;
     private JTextField nameTextField;
     private JButton nextButton;
-    private DatabaseManager databaseManager;
     private String test;
     private int id;
 
     //Constructor
     public NewsetTitleForm() {
-        databaseManager = new DatabaseManager();
-        //test = new Test();
         rootPanel2.setPreferredSize(new Dimension(500, 350));
         nextButton.addActionListener(new ActionListener() {
             @Override
@@ -56,11 +58,11 @@ public class NewsetTitleForm {
      * Insert new test set in TESTS table
      */
     public void addTestset() {
-        //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
+        TestDAO testDAO = DAOFactory.getTestDAO();
         //if (isValidLength())     //item is valid length
         //if (!isDuplicate() && isValidLength()) {       //item is not duplicated
         test = nameTextField.getText();
-        id = databaseManager.insertGetTest(test);
+        id = testDAO.insertGetTest(test);
         //itemTextField.setText("");
         //itemTextField.requestFocus();
     }

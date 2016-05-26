@@ -1,7 +1,8 @@
 package AdminSetup;
 
 import ContainerClasses.Test;
-import SharedFunctions.DatabaseManager;
+import DaoClasses.DAOFactory;
+import DaoClasses.TestDAO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,13 +25,13 @@ public class TestsetChoiceForm {
     private JPanel rootPanel1;
     private int testID;
     private ArrayList<Test> testsArr;
-    private DatabaseManager databaseManager;
+    //private DatabaseManager databaseManager;
 
     //Constructor
     public TestsetChoiceForm() {
 
         rootPanel1.setPreferredSize(new Dimension(500,350));
-        databaseManager = new DatabaseManager();
+        //databaseManager = new DatabaseManager();
         testsArr = new ArrayList<>();
         getTests();
         fillNameBox();
@@ -102,7 +103,8 @@ public class TestsetChoiceForm {
      * Get test set list from DB
      */
     public void getTests(){
-        if(!databaseManager.readAllTests(testsArr)){
+        TestDAO testDAO = DAOFactory.getTestDAO();
+        if(!testDAO.readAllTests(testsArr)){
             JOptionPane.showMessageDialog(rootPanel1, "Failed to read tests from database.");
         }
     }
