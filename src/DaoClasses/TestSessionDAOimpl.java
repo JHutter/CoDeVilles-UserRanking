@@ -12,8 +12,11 @@ import java.util.ArrayList;
  * This class implements the methods in the TestSessionDAO class
  *
  * Date created: 05/24/2016
- *  @author JoAnne Hutter
- *  @version 05/24/2016
+ *  @author JoAnne Hutter, Zack Salzwedel
+ *  @version 05/27/2016
+ *
+ *  2016.5.27
+ *      added function to get inactive test sessions
  */
 public class TestSessionDAOimpl implements TestSessionDAO {
     //fields
