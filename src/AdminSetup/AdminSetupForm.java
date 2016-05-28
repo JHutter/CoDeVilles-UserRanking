@@ -36,8 +36,10 @@ import java.lang.String;
  * - Add fields, tItemDAO, testID
  * - Update addItem, deleteItem method to use DAO to handling DB
  * - Update constructor to get TestID as parameter
- *
+ * 05/25/2016
  * - Use DAO to get session data
+ * 05/28/2016
+ * - Delete getSessions method and update ckeckTakenTest to use select count(*) statement
  */
 
 public class AdminSetupForm {
@@ -50,7 +52,7 @@ public class AdminSetupForm {
     private JButton cancelButton;
     private JLabel takenLabel;
     private ArrayList<TestItem> testItems;
-    private ArrayList<TestSession> testSessions;
+    //private ArrayList<TestSession> testSessions;
     private DefaultListModel listModel = new DefaultListModel();
     private TestItem tItem;
     private int testID;
@@ -59,20 +61,20 @@ public class AdminSetupForm {
      *  Constructor
      */
     public AdminSetupForm(int num){
-        //JOptionPane.showMessageDialog(rootPanel, num);
+        JOptionPane.showMessageDialog(rootPanel, "test id:"+ num);
         //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
         rootPanel.setPreferredSize(new Dimension(500,350));     // set size of window
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
-        testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
+        //testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
 
         testID=num;     //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
 
-        getSessions();
+        //getSessions();
         getItems();
         showItemList();
         ckeckTakenTest();
-        //checkItemNumber();
+        checkItemNumber();
         checkListSelected();
 
         addButton.addActionListener(new ActionListener() {
@@ -125,12 +127,12 @@ public class AdminSetupForm {
      * Get session list array from TestSessionDAO
      */
     //will be updated to use DAO
-    public void getSessions(){
+/*    public void getSessions(){
         TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
         if(!tSessionDAO.readAllTestSessions(testSessions)){
             JOptionPane.showMessageDialog(rootPanel, "Fail to read test sessions");
         }
-    }
+    }*/
 
     /**
      * Show exist items on the list from DB
@@ -201,11 +203,8 @@ public class AdminSetupForm {
      */
     public void ckeckTakenTest(){
         TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
-        if(!tSessionDAO.readAllTestSessions(testSessions)){
-            JOptionPane.showMessageDialog(rootPanel, "Fail to read test items from database.");
-        }
-        else{
-          if (testSessions.size() > 100) {        // please change here to "if (testSessions.size() > 0) " to test ckeckTakenTest method
+        int count = tSessionDAO.countSession(testID);
+          if (count > 0) {        // please change here to "if (testSessions.size() > 0) " to test ckeckTakenTest method
               addButton.setEnabled(false);
               deleteButton.setEnabled(false);
               cancelButton.setEnabled(false);
@@ -215,8 +214,9 @@ public class AdminSetupForm {
           else{
               takenLabel.setVisible(false);
           }
-      }
+        //JOptionPane.showMessageDialog(rootPanel,"testID:"+testID +"sessions:"+count);
     }
+
 
    /**
     *  Check the number of item. If there are less than two items , finish button should be disabled
