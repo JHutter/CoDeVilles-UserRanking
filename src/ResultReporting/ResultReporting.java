@@ -7,6 +7,8 @@ import ContainerClasses.UserAccount;
 
 import DaoClasses.UserAccountDAOimpl;
 import DaoClasses.TestResultDAOimpl;
+import DaoClasses.TestItemDAOimpl;
+import DaoClasses.TestSessionDAOimpl;
 import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
@@ -36,7 +38,8 @@ import java.util.ArrayList;
  *  2016.5.20
  *      added button to open results matrix
  *      refactored some database functions to use Dao classes. test sessions and test items Dao not implemented yet
- *
+ *  2016.5.27
+ *      refactored final classes to use Dao classes
  */
 public class ResultReporting {
     private JComboBox nameBox;
@@ -51,9 +54,10 @@ public class ResultReporting {
     private ArrayList<TestResult> testResults;
     private ArrayList<RankedItem> rankedResults;
 
-    private DatabaseManager databaseManager;
     private TestResultDAOimpl resultsManager;
     private UserAccountDAOimpl userAccountsManager;
+    private TestSessionDAOimpl sessionsManager;
+    private TestItemDAOimpl itemsManager;
 
     /**
      * Default Constructor
@@ -63,9 +67,10 @@ public class ResultReporting {
         rootPanel.setPreferredSize(new Dimension(500, 350));
 
         //instance the database managers
-        databaseManager = new DatabaseManager();
         resultsManager = new TestResultDAOimpl();
         userAccountsManager = new UserAccountDAOimpl();
+        sessionsManager = new TestSessionDAOimpl();
+        itemsManager = new TestItemDAOimpl();
 
         //populate the test result list, test item list, test session list, and user account list
         testItems = new ArrayList<>();
@@ -116,7 +121,7 @@ public class ResultReporting {
      */
     public void getTestItems(){
         //populate with values from the database
-        if(!databaseManager.readAllTestItems(testItems)){
+        if(!itemsManager.readAllTestItems(testItems)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test items from database. Please check your internet connection and try again.");
             System.exit(-1);
@@ -128,7 +133,7 @@ public class ResultReporting {
      */
     public void getTestSessions(){
         //populate with values from the database
-        if(!databaseManager.readAllTestSessions(testSessions)){
+        if(!sessionsManager.readAllTestSessions(testSessions)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test sessions from database. Please check your internet connection and try again.");
             System.exit(-2);
