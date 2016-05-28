@@ -126,7 +126,7 @@ public class ResultReporting {
     public void getTestSessions(){
         TestSessionDAO sessionsManager = DAOFactory.getTestSessionDAO();
         //populate with values from the database
-        if(!sessionsManager.readAllTestSessions(testSessions)){
+        if(!sessionsManager.readInactiveTestSessions(testSessions)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test sessions from database. Please check your internet connection and try again.");
             System.exit(-2);

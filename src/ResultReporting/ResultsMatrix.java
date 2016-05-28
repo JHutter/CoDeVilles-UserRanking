@@ -122,7 +122,7 @@ public class ResultsMatrix {
     public void getTestSessions(){
         TestSessionDAO sessionsManager = DAOFactory.getTestSessionDAO();
         //populate with values from the database
-        if(!sessionsManager.readAllTestSessions(testSessions)){
+        if(!sessionsManager.readInactiveTestSessions(testSessions)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test sessions from database. Please check your internet connection and try again.");
             System.exit(-2);
@@ -215,11 +215,11 @@ public class ResultsMatrix {
     }
 
     /**
-     * Checks if an item has associated results
+     * Checks if an item has associated results in the selected session
      */
     public boolean itemHasResult (TestItem item){
         for(TestResult result: testResults){
-            if(item.getItemID() == result.getItemID()){return true;}
+            if(item.getItemID() == result.getItemID() && result.getSessionID() == selectedSession){return true;}
         }
         return false;
     }

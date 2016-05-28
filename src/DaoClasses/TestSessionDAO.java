@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public interface TestSessionDAO {
     public void insertSession(int userID, int testID);
     public boolean readAllTestSessions(ArrayList<TestSession> testSessions);
+    public boolean readInactiveTestSessions(ArrayList<TestSession> testSessions);
     public int getSessionID(int userID, int testID);
 
 }
