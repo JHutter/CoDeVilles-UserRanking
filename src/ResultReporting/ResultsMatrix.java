@@ -215,7 +215,7 @@ public class ResultsMatrix {
     }
 
     /**
-     * Checks if an item is
+     * Checks if an item has associated results
      */
     public boolean itemHasResult (TestItem item){
         for(TestResult result: testResults){
@@ -225,13 +225,12 @@ public class ResultsMatrix {
     }
 
     /**
-     * turns two items into a string result
+     * turns two items into a string result by looping though the results list twice
      * @param leftItem the left item in the matrix
      * @param topItem the top item in the matrix
      * @return a string value indicating the result of the comparison in the selected test session.
      */
     public String compareItems(TestItem leftItem,TestItem topItem){
-        String resultString = "dbg1";
         //left item loop
         for(TestResult leftResult: testResults){
             //if statement to short circuit loop
@@ -248,8 +247,7 @@ public class ResultsMatrix {
                 }
             }
         }
-        resultString = " ";
-        return resultString; //return blank if no data found
+        return " "; //return blank if no data found
     }
 
     /**
@@ -276,28 +274,23 @@ public class ResultsMatrix {
      * @return resultString the string indicating the 'winning' result
      */
     public String getResultsString(TestResult leftResult, TestResult topResult){
-        String resultString = "dbg3";
 
         //print the string result based on the value in each result object
         //left item was selected
         if(leftResult.getResult() > topResult.getResult()) {
-            resultString = "<";
-            return resultString;
+            return "<";
         }
         //top item was selected
         else if (leftResult.getResult() < topResult.getResult()) {
-            resultString = "/\\";
-            return resultString;
+            return "/\\";
         }
         //neither item was selected
         else if (leftResult.getResult() == topResult.getResult() ){
-            resultString = "0";
-            return resultString;
+            return "0";
 
         }else{
             //return debug value because the other comparisons should not all fail
-            resultString = "Dbg2";
-            return resultString;
+            return "Dbg2";
         }
     }
 
