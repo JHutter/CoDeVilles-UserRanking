@@ -22,7 +22,7 @@ public class TestItemDAOimpl implements TestItemDAO {
     DatabaseConnection databaseConnection;
 
     //string constants
-    private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT ItemID, ItemText, TestID FROM TESTITEMS";
+    private static final String GET_ALL_TEST_ITEMS_SQL = "SELECT ItemID, ItemText, TestID FROM TESTITEMS ORDER BY ItemText";
     private static final String INSERT_NEW_TEST_ITEM_SQL = "INSERT INTO TESTITEMS (ItemText, TestID) VALUES (?,?)";
     private static final String DELETE_TEST_ITEM_SQL = "DELETE FROM TESTITEMS WHERE ItemText = ? and TestID= ?";
     private static final String GET_TEST_ITEMS_SQL = "SELECT ItemID, ItemText FROM TESTITEMS WHERE TestID = ?";

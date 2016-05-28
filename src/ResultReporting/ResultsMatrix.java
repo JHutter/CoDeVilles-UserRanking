@@ -139,7 +139,9 @@ public class ResultsMatrix {
                 sessionBox.addItem(testSession.getSessionID());
             }
         }
-        selectedSession = (int) sessionBox.getSelectedItem();
+        if(sessionBox.getItemCount() != 0) {
+            selectedSession = (int) sessionBox.getSelectedItem();
+        }
     }
 
     /**
@@ -187,7 +189,7 @@ public class ResultsMatrix {
         //print a tab character for the first column then the name of each item
         resultsArea.append("\t");
         for(TestItem testItem : testItems){
-            resultsArea.append(testItem.getItemText() + "\t");
+            if(itemHasResult(testItem)){resultsArea.append(testItem.getItemText() + "\t");}
         }
         resultsArea.append("\n");
     }
@@ -198,14 +200,26 @@ public class ResultsMatrix {
     public void appendResultsRows(){
         //row loop
         for (TestItem leftItem : testItems){
-            resultsArea.append(leftItem.getItemText() + "\t");
-            //column loop
-            for (TestItem topItem : testItems){
-                resultsArea.append(getStringResult(leftItem, topItem) + "\t");
+            if(itemHasResult(leftItem)) {
+                resultsArea.append(leftItem.getItemText() + "\t");
+                //column loop
+                for (TestItem topItem : testItems) {
+                    if(itemHasResult(topItem)){resultsArea.append(getStringResult(leftItem, topItem) + "\t");}
+                }
+                resultsArea.append("\n");
             }
-            resultsArea.append("\n");
         }
         resultsArea.append("Legend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
+    }
+
+    /**
+     * Checks if an item is
+     */
+    public boolean itemHasResult (TestItem item){
+        for(TestResult result: testResults){
+            if(item.getItemID() == result.getItemID()){return true;}
+        }
+        return false;
     }
 
     /**
