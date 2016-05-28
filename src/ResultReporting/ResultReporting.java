@@ -5,11 +5,12 @@ import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 
-import DaoClasses.UserAccountDAOimpl;
-import DaoClasses.TestResultDAOimpl;
-import DaoClasses.TestItemDAOimpl;
-import DaoClasses.TestSessionDAOimpl;
-import SharedFunctions.DatabaseManager;
+import DaoClasses.UserAccountDAO;
+import DaoClasses.TestResultDAO;
+import DaoClasses.TestItemDAO;
+import DaoClasses.TestSessionDAO;
+import DaoClasses.DAOFactory;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 4/19/2016.
  *  @author Zack
- *  @version 2016.5.20
+ *  @version 2016.5.27
  *
  *  2016.4.29
  *      added error pop-ups if database read fails
@@ -39,7 +40,8 @@ import java.util.ArrayList;
  *      added button to open results matrix
  *      refactored some database functions to use Dao classes. test sessions and test items Dao not implemented yet
  *  2016.5.27
- *      refactored final classes to use Dao classes
+ *      refactored test sessions and test items database functions to use Dao classes
+ *      implemented DAO factory
  */
 public class ResultReporting {
     private JComboBox nameBox;
@@ -54,23 +56,12 @@ public class ResultReporting {
     private ArrayList<TestResult> testResults;
     private ArrayList<RankedItem> rankedResults;
 
-    private TestResultDAOimpl resultsManager;
-    private UserAccountDAOimpl userAccountsManager;
-    private TestSessionDAOimpl sessionsManager;
-    private TestItemDAOimpl itemsManager;
-
     /**
      * Default Constructor
      */
     public ResultReporting() {
         //Set the size of the panel to agreed upon value
         rootPanel.setPreferredSize(new Dimension(500, 350));
-
-        //instance the database managers
-        resultsManager = new TestResultDAOimpl();
-        userAccountsManager = new UserAccountDAOimpl();
-        sessionsManager = new TestSessionDAOimpl();
-        itemsManager = new TestItemDAOimpl();
 
         //populate the test result list, test item list, test session list, and user account list
         testItems = new ArrayList<>();
@@ -120,6 +111,7 @@ public class ResultReporting {
      * fills the test item array list with data
      */
     public void getTestItems(){
+        TestItemDAO itemsManager = DAOFactory.getTestItemDAO();
         //populate with values from the database
         if(!itemsManager.readAllTestItems(testItems)){
             //close the window due to read failure
@@ -132,6 +124,7 @@ public class ResultReporting {
      * fills the test session array list with data
      */
     public void getTestSessions(){
+        TestSessionDAO sessionsManager = DAOFactory.getTestSessionDAO();
         //populate with values from the database
         if(!sessionsManager.readAllTestSessions(testSessions)){
             //close the window due to read failure
@@ -144,6 +137,7 @@ public class ResultReporting {
      * fills the test result array list with data
      */
     public void getTestResults(){
+        TestResultDAO resultsManager = DAOFactory.getTestResultDAO();
         //populate with values from the database
         if(!resultsManager.readAllTestResults(testResults)){
             //close the window due to read failure
@@ -156,6 +150,7 @@ public class ResultReporting {
      * fills the user account array list with data
      */
     public void getUserAccounts(){
+        UserAccountDAO userAccountsManager = DAOFactory.getUserAccountDAO();
         //populate with values from the database
         if(!userAccountsManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure

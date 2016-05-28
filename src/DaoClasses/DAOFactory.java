@@ -24,7 +24,7 @@ public class DAOFactory {
         return testDAO;
     }
 
-    /*
+
     public static TestResultDAO getTestResultDAO(){
         TestResultDAO tResultDAO = new TestResultDAOimpl();
         return tResultDAO;
@@ -34,5 +34,4 @@ public class DAOFactory {
         UserAccountDAO uAccountDAO = new UserAccountDAOimpl();
         return uAccountDAO;
     }
-*/
 }
