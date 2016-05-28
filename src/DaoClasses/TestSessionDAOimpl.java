@@ -12,11 +12,15 @@ import java.util.ArrayList;
  * This class implements the methods in the TestSessionDAO class
  *
  * Date created: 05/24/2016
- *  @author JoAnne Hutter, Zack Salzwedel
- *  @version 05/27/2016
+ *  @author JoAnne Hutter, Zack Salzwedel, Jinsook Lee
+ *  @version 05/28/2016
  *
  *  2016.5.27
  *      added function to get inactive test sessions
+ *
+ *  2016.5.28
+ *      added COUNT_SESSIONS_ID_SQL statement
+ *      added countSession method to check test is taken or not in Admin Setup
  */
 public class TestSessionDAOimpl implements TestSessionDAO {
     //fields
@@ -28,6 +32,7 @@ public class TestSessionDAOimpl implements TestSessionDAO {
                                                                  "WHERE isActive = 0";
     private static final String SET_IS_ACTIVE_SQL = "UPDATE TESTSESSIONS SET isActive = 1 WHERE SessionID = ?" +
             "and UserID = ? and  TestID = ?";
+    private static final String COUNT_SESSIONS_ID_SQL = "SELECT COUNT(*) AS total FROM TESTSESSIONS WHERE TestID = ?";
 
     //constructor
     public TestSessionDAOimpl(){
@@ -176,6 +181,30 @@ public class TestSessionDAOimpl implements TestSessionDAO {
             e.printStackTrace();
             return;
         }
+    }
+    /**
+     * Count SESSIONS of given TEST ID
+     * @param tID int, the ID for the test
+     * @return number of sessions of given test ID
+     */
+    public int countSession(int tID) {
+        int cnt = -1;
+        try ( //try t create a database connection
+              Connection connection =  databaseConnection.getConnection();
+              //Statement stmt = connection.createStatement();
+              PreparedStatement stmt = connection.prepareStatement(COUNT_SESSIONS_ID_SQL);
+        ){
+            stmt.setInt(1, tID);
+            ResultSet rs1 = stmt.executeQuery();
+            if(rs1.next()) {
+                cnt = rs1.getInt("total");
+            }
+        }
+        catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return cnt;
     }
 
 
