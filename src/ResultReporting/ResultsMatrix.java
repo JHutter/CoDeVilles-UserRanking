@@ -5,9 +5,11 @@ import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 
-import SharedFunctions.DatabaseManager;
-import DaoClasses.UserAccountDAOimpl;
-import DaoClasses.TestResultDAOimpl;
+import DaoClasses.UserAccountDAO;
+import DaoClasses.TestResultDAO;
+import DaoClasses.TestItemDAO;
+import DaoClasses.TestSessionDAO;
+import DaoClasses.DAOFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +23,13 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 5/20/2016.
  *  @author Zack
- *  @version 2016.5.20
+ *  @version 2016.5.27
+ *
+ *  2016.5.27
+ *      refactored test sessions and test items database functions to use Dao classes
+ *      implemented DAO factory
+ *      no longer lists items with no results
+ *      refactored to reduce nesting in results string finding
  */
 public class ResultsMatrix {
     private JComboBox userBox;
@@ -37,10 +45,6 @@ public class ResultsMatrix {
     private ArrayList<TestSession> testSessions;
     private ArrayList<TestResult> testResults;
 
-    private DatabaseManager databaseManager;
-    private TestResultDAOimpl resultsManager;
-    private UserAccountDAOimpl userAccountsManager;
-
     private int selectedUser, selectedSession;
 
     /**
@@ -48,12 +52,7 @@ public class ResultsMatrix {
      */
     public ResultsMatrix() {
         //Set the size of the panel to necessary value
-        rootPanel.setPreferredSize(new Dimension(650, 350));
-
-        //instance database managers
-        databaseManager = new DatabaseManager();
-        resultsManager = new TestResultDAOimpl();
-        userAccountsManager = new UserAccountDAOimpl();
+        rootPanel.setPreferredSize(new Dimension(550, 350));
 
         //populate the test result list, test item list, test session list, and user account list
         userAccounts = new ArrayList<>();
@@ -98,6 +97,7 @@ public class ResultsMatrix {
      * fills the user account array list with data
      */
     public void getUserAccounts(){
+        UserAccountDAO userAccountsManager = DAOFactory.getUserAccountDAO();
         //populate with values from the database
         if(!userAccountsManager.readUsersHavingResults(userAccounts)){
             //close the window due to read failure
@@ -120,8 +120,9 @@ public class ResultsMatrix {
      * fills the test session array list with data
      */
     public void getTestSessions(){
+        TestSessionDAO sessionsManager = DAOFactory.getTestSessionDAO();
         //populate with values from the database
-        if(!databaseManager.readAllTestSessions(testSessions)){
+        if(!sessionsManager.readInactiveTestSessions(testSessions)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test sessions from database. Please check your internet connection and try again.");
             System.exit(-2);
@@ -140,15 +141,18 @@ public class ResultsMatrix {
                 sessionBox.addItem(testSession.getSessionID());
             }
         }
-        selectedSession = (int) sessionBox.getSelectedItem();
+        if(sessionBox.getItemCount() != 0) {
+            selectedSession = (int) sessionBox.getSelectedItem();
+        }
     }
 
     /**
      * fills the test item array list with data
      */
     public void getTestItems(){
+        TestItemDAO itemsManager = DAOFactory.getTestItemDAO();
         //populate with values from the database
-        if(!databaseManager.readAllTestItems(testItems)){
+        if(!itemsManager.readAllTestItems(testItems)){
             //close the window due to read failure
             JOptionPane.showMessageDialog(rootPanel, "Failed to read test items from database. Please check your internet connection and try again.");
             System.exit(-1);
@@ -159,6 +163,7 @@ public class ResultsMatrix {
      * fills the test result array list with data
      */
     public void getTestResults(){
+        TestResultDAO resultsManager = DAOFactory.getTestResultDAO();
         //populate with values from the database
         if(!resultsManager.readAllTestResults(testResults)){
             //close the window due to read failure
@@ -186,7 +191,7 @@ public class ResultsMatrix {
         //print a tab character for the first column then the name of each item
         resultsArea.append("\t");
         for(TestItem testItem : testItems){
-            resultsArea.append(testItem.getItemText() + "\t");
+            if(itemHasResult(testItem)){resultsArea.append(testItem.getItemText() + "\t");}
         }
         resultsArea.append("\n");
     }
@@ -197,23 +202,35 @@ public class ResultsMatrix {
     public void appendResultsRows(){
         //row loop
         for (TestItem leftItem : testItems){
-            resultsArea.append(leftItem.getItemText() + "\t");
-            //column loop
-            for (TestItem topItem : testItems){
-                resultsArea.append(getStringResult(leftItem, topItem) + "\t");
+            if(itemHasResult(leftItem)) {
+                resultsArea.append(leftItem.getItemText() + "\t");
+                //column loop
+                for (TestItem topItem : testItems) {
+                    if(itemHasResult(topItem)){resultsArea.append(compareItems(leftItem, topItem) + "\t");}
+                }
+                resultsArea.append("\n");
             }
-            resultsArea.append("\n");
         }
-        resultsArea.append("Legend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
+        resultsArea.append("\nLegend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
     }
 
     /**
-     * turns two items into a string result
+     * Checks if an item has associated results in the selected session
+     */
+    public boolean itemHasResult (TestItem item){
+        for(TestResult result: testResults){
+            if(item.getItemID() == result.getItemID() && result.getSessionID() == selectedSession){return true;}
+        }
+        return false;
+    }
+
+    /**
+     * turns two items into a string result by looping though the results list twice
      * @param leftItem the left item in the matrix
      * @param topItem the top item in the matrix
      * @return a string value indicating the result of the comparison in the selected test session.
      */
-    public String getStringResult(TestItem leftItem,TestItem topItem){
+    public String compareItems(TestItem leftItem,TestItem topItem){
         //left item loop
         for(TestResult leftResult: testResults){
             //if statement to short circuit loop
@@ -224,36 +241,57 @@ public class ResultsMatrix {
                     //if statement to short circuit loop
                     if(topResult.getItemID() == topItem.getItemID()){
 
-                        //if both results are part of the selected session check the question number
-                        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
-
-                            //if both results have the same question number, but not the same item id number check the result
-                            if(leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
-
-                                //print the string result based on the value in each result object
-                                //left item was selected
-                                if(leftResult.getResult() > topResult.getResult()) {
-                                    return "<";
-                                }
-                                //top item was selected
-                                else if (leftResult.getResult() < topResult.getResult()) {
-                                    return "/\\";
-                                }
-                                //neither item was selected
-                                else if (leftResult.getResult() == topResult.getResult() ){
-                                    return "0";
-
-                                }else{
-                                    //return debug value because the other comparisons should not all fail
-                                    return "Dbg2";
-                                }
-                            }
-                        }
+                        //check the results
+                        if(checkResults(leftResult, topResult)) {return getResultsString(leftResult, topResult);}
                     }
                 }
             }
         }
         return " "; //return blank if no data found
+    }
+
+    /**
+     * checks to see if two results are from the same question of the same test session
+     * @param leftResult the left item in the matrix
+     * @param topResult the top item in the matrix
+     * @return boolean indicating whether the results are from the same question & session
+     */
+    public boolean checkResults(TestResult leftResult, TestResult topResult){
+        //if both results are part of the selected session check the question number
+        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
+            //if both results have the same question number, but not the same item id number check the result
+            if (leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * takes two results from the same test session and returns a string based on which item the user selected
+     * @param leftResult the left item in the matrix
+     * @param topResult the top item in the matrix
+     * @return resultString the string indicating the 'winning' result
+     */
+    public String getResultsString(TestResult leftResult, TestResult topResult){
+
+        //print the string result based on the value in each result object
+        //left item was selected
+        if(leftResult.getResult() > topResult.getResult()) {
+            return "<";
+        }
+        //top item was selected
+        else if (leftResult.getResult() < topResult.getResult()) {
+            return "/\\";
+        }
+        //neither item was selected
+        else if (leftResult.getResult() == topResult.getResult() ){
+            return "0";
+
+        }else{
+            //return debug value because the other comparisons should not all fail
+            return "Dbg2";
+        }
     }
 
     /**
