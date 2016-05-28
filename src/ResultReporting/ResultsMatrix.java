@@ -28,6 +28,8 @@ import java.util.ArrayList;
  *  2016.5.27
  *      refactored test sessions and test items database functions to use Dao classes
  *      implemented DAO factory
+ *      no longer lists items with no results
+ *      refactored to reduce nesting in results string finding
  */
 public class ResultsMatrix {
     private JComboBox userBox;
@@ -50,7 +52,7 @@ public class ResultsMatrix {
      */
     public ResultsMatrix() {
         //Set the size of the panel to necessary value
-        rootPanel.setPreferredSize(new Dimension(650, 350));
+        rootPanel.setPreferredSize(new Dimension(550, 350));
 
         //populate the test result list, test item list, test session list, and user account list
         userAccounts = new ArrayList<>();
@@ -204,12 +206,12 @@ public class ResultsMatrix {
                 resultsArea.append(leftItem.getItemText() + "\t");
                 //column loop
                 for (TestItem topItem : testItems) {
-                    if(itemHasResult(topItem)){resultsArea.append(getStringResult(leftItem, topItem) + "\t");}
+                    if(itemHasResult(topItem)){resultsArea.append(compareItems(leftItem, topItem) + "\t");}
                 }
                 resultsArea.append("\n");
             }
         }
-        resultsArea.append("Legend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
+        resultsArea.append("\nLegend: < = left item selected, /\\ = top item selected, 0 = tie, \" \" = No Data");
     }
 
     /**
@@ -228,7 +230,8 @@ public class ResultsMatrix {
      * @param topItem the top item in the matrix
      * @return a string value indicating the result of the comparison in the selected test session.
      */
-    public String getStringResult(TestItem leftItem,TestItem topItem){
+    public String compareItems(TestItem leftItem,TestItem topItem){
+        String resultString = "dbg1";
         //left item loop
         for(TestResult leftResult: testResults){
             //if statement to short circuit loop
@@ -239,36 +242,63 @@ public class ResultsMatrix {
                     //if statement to short circuit loop
                     if(topResult.getItemID() == topItem.getItemID()){
 
-                        //if both results are part of the selected session check the question number
-                        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
-
-                            //if both results have the same question number, but not the same item id number check the result
-                            if(leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
-
-                                //print the string result based on the value in each result object
-                                //left item was selected
-                                if(leftResult.getResult() > topResult.getResult()) {
-                                    return "<";
-                                }
-                                //top item was selected
-                                else if (leftResult.getResult() < topResult.getResult()) {
-                                    return "/\\";
-                                }
-                                //neither item was selected
-                                else if (leftResult.getResult() == topResult.getResult() ){
-                                    return "0";
-
-                                }else{
-                                    //return debug value because the other comparisons should not all fail
-                                    return "Dbg2";
-                                }
-                            }
-                        }
+                        //check the results
+                        if(checkResults(leftResult, topResult)) {return getResultsString(leftResult, topResult);}
                     }
                 }
             }
         }
-        return " "; //return blank if no data found
+        resultString = " ";
+        return resultString; //return blank if no data found
+    }
+
+    /**
+     * checks to see if two results are from the same question of the same test session
+     * @param leftResult the left item in the matrix
+     * @param topResult the top item in the matrix
+     * @return boolean indicating whether the results are from the same question & session
+     */
+    public boolean checkResults(TestResult leftResult, TestResult topResult){
+        //if both results are part of the selected session check the question number
+        if(leftResult.getSessionID() == selectedSession && topResult.getSessionID() == selectedSession) {
+            //if both results have the same question number, but not the same item id number check the result
+            if (leftResult.getQuestionNumber() == topResult.getQuestionNumber() && leftResult.getItemID() != topResult.getItemID()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * takes two results from the same test session and returns a string based on which item the user selected
+     * @param leftResult the left item in the matrix
+     * @param topResult the top item in the matrix
+     * @return resultString the string indicating the 'winning' result
+     */
+    public String getResultsString(TestResult leftResult, TestResult topResult){
+        String resultString = "dbg3";
+
+        //print the string result based on the value in each result object
+        //left item was selected
+        if(leftResult.getResult() > topResult.getResult()) {
+            resultString = "<";
+            return resultString;
+        }
+        //top item was selected
+        else if (leftResult.getResult() < topResult.getResult()) {
+            resultString = "/\\";
+            return resultString;
+        }
+        //neither item was selected
+        else if (leftResult.getResult() == topResult.getResult() ){
+            resultString = "0";
+            return resultString;
+
+        }else{
+            //return debug value because the other comparisons should not all fail
+            resultString = "Dbg2";
+            return resultString;
+        }
     }
 
     /**
