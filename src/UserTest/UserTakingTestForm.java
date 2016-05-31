@@ -1,7 +1,5 @@
 package UserTest;
 
-import ContainerClasses.TestItem;
-import ContainerClasses.TestResult;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 import SharedFunctions.DatabaseManager;
@@ -10,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 /**
  * Description: Form for user taking test story
@@ -30,6 +27,8 @@ import java.util.ArrayList;
  * 2016.5.24:
  *      Fixed problem with testID, problem with password
  *      Insert session fixed
+ * 2016.5.31
+ *      Added progress bar
  */
 public class UserTakingTestForm {
     private JPanel rootPanel;
@@ -37,6 +36,7 @@ public class UserTakingTestForm {
     private JButton itemBButton;
     private JButton noItemButton;
     private JButton finishButton;
+    private JProgressBar progressBar;
 
     private Test test;
     private UserAccount user;
@@ -51,6 +51,7 @@ public class UserTakingTestForm {
         String email = dialogBox.getEmail();
         String password = dialogBox.getPassword();
         int userID = new DatabaseManager().getUserID(email, password);
+        setupProgressBar();
 
         setup(userID);
         //finishButton.setText(""+session.getSessionID());
@@ -118,12 +119,14 @@ public class UserTakingTestForm {
                         itemAButton.setVisible(false);
                         itemBButton.setVisible(false);
                         noItemButton.setVisible(false);
-                        finishButton.setText("Finish");
+                        progressBar.setVisible(false);
                         finishTest();
                     }
                     resetItemButtonColors(itemAButton, itemBButton, noItemButton);
 
                 }
+                updateProgressBar((int)test.getProgress());
+
                 return;
             }
         });
@@ -193,13 +196,11 @@ public class UserTakingTestForm {
         user.setUserID(userID);
         session = new TestSession(test.getTestID(), user.getUserID(), true);
         database = new DatabaseManager();
-        database.insertSession(user.getUserID(), test.getTestID());
+        //database.insertSession(user.getUserID(), test.getTestID());
 
-
-
-        session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
-        //session.setSessionID(3);
-        database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
+        //session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
+        session.setSessionID(3);
+        //database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
         return;
     }
 
@@ -210,7 +211,7 @@ public class UserTakingTestForm {
      */
     private void finishTest() {
         // write results to database iteratively
-        finishButton.setText("Test is complete.\nPlease close this window to finish.");
+        finishButton.setText("<html>Test is complete.<br>Please close this window to finish.</html>");
         test.writeResults();
     }
 
@@ -232,6 +233,28 @@ public class UserTakingTestForm {
     private void disableFinishButton() {
         finishButton.setEnabled(false);
         return;
+    }
+
+    /**
+     * updateProgressBar
+     * update the progress bar based on test turn
+     * @param value the int value (currentTurn/totalTurns)
+     */
+    public void updateProgressBar(int value){
+        String progressString = value + "%";
+        progressBar.setValue(value);
+        progressBar.setString(progressString);
+        return;
+    }
+
+    /**
+     * setProgressBar
+     * sets up progress bar (not indeterminate, 0 value, string painted)
+     */
+    public void setupProgressBar(){
+        progressBar.setIndeterminate(false);
+        progressBar.setStringPainted(true);
+        updateProgressBar(0);
     }
 
 

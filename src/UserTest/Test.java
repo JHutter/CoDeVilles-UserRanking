@@ -25,6 +25,7 @@ public class Test extends ContainerClasses.Test{
     private int currentTurn;
     private int itemTotal;
     private int testID;
+    private float progress;
     private ArrayList<TestItem> items;
     private ArrayList<ItemPair> pairs;
     private DatabaseManager database;
@@ -40,10 +41,12 @@ public class Test extends ContainerClasses.Test{
      */
     public Test(int testID) {
         currentTurn = 0;
+        progress = 0;
         setTestID(testID);
         items = new ArrayList<TestItem>();
         DatabaseManager database = new DatabaseManager();
-        setDBItems(database.getTestItems(testID));
+        //setDBItems(database.getTestItems(testID));
+        setBackupItems();
         if (itemTotal == 0) {
             setBackupItems();
         }
@@ -106,7 +109,8 @@ public class Test extends ContainerClasses.Test{
      * for testing, not production use
      */
     public void setBackupItems() {
-        ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Tablet", "PC - Windows", "PC - Mac", "Smartphone", "Raspberry Pi"));
+        //ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Tablet", "PC - Windows", "PC - Mac", "Smartphone", "Brick Phone", "Wristwatch", "VR Set"));
+        ArrayList<String> stringItems = new ArrayList<String>(Arrays.asList("Tablet", "PC - Windows", "PC - Mac", "Smartphone"));
         int testID = 0;
         int itemID = 0;
         for (String stringItem : stringItems) {
@@ -216,7 +220,7 @@ public class Test extends ContainerClasses.Test{
     public void writeResults() {
         database = new DatabaseManager();
         for (TestResult result : results) {
-            database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
+            //database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
         }
     }
 
@@ -269,6 +273,16 @@ public class Test extends ContainerClasses.Test{
 
     private void shuffleSubList(int start, int stop){
         Collections.shuffle(pairs.subList(start, start));
+    }
+
+    public void calculateProgress(){
+        progress = ((float)getCurrentTurn()/(float)getTotalTurn()) * 100;
+        return;
+    }
+
+    public float getProgress(){
+        calculateProgress();
+        return progress;
     }
 
 
