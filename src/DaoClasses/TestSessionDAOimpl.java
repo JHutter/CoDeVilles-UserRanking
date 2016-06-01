@@ -21,6 +21,10 @@ import java.util.ArrayList;
  *  2016.5.28
  *      added COUNT_SESSIONS_ID_SQL statement
  *      added countSession method to check test is taken or not in Admin Setup
+ *
+ * 2016.5.31
+ *      changed setIsActive to have a TestSession obj as parameter instead of individual ints
+ *
  */
 public class TestSessionDAOimpl implements TestSessionDAO {
     //fields
@@ -161,11 +165,12 @@ public class TestSessionDAOimpl implements TestSessionDAO {
 
     /**
      * Set isActive to true when a test is being taken by the user
-     * @param sessionID int, the ID for the session
-     * @param userID int, the ID for the user
-     * @param testID int, the ID for the test
+     * @param session TestSession, the session to mark active
      */
-    public void setIsActive(int sessionID, int userID, int testID) {
+    public void setIsActive(TestSession session) {
+        int sessionID = session.getSessionID();
+        int userID = session.getUserID();
+        int testID = session.getTestID();
         try ( //try t create a database connection
               Connection connection =  databaseConnection.getConnection();
               PreparedStatement stmt = connection.prepareStatement(SET_IS_ACTIVE_SQL);

@@ -9,9 +9,13 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 5/19/2016.
  *  @author Zack
- *  @version 2016.5.19
+ *  @version 2016.5.31
+ *
+ *  Modifications:
+ *  2016.5.31
+ *      refactored insertResult to take a TestResult param, instead of several ints
  */
 public interface TestResultDAO {
     public boolean readAllTestResults(ArrayList<TestResult> testResults);
-    public boolean insertResult(int questionNumber, int itemID, int sessionID, int result);
+    public boolean insertResult(TestResult result);
 }
