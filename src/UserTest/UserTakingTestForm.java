@@ -3,12 +3,13 @@ package UserTest;
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
 import DaoClasses.DAOFactory;
-import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 /**
@@ -33,21 +34,20 @@ import java.util.ArrayList;
  *      Added progress bar
  */
 public class UserTakingTestForm {
+    // fields
     private JPanel rootPanel;
     private JButton itemAButton;
     private JButton itemBButton;
     private JButton noItemButton;
     private JButton finishButton;
     private JProgressBar progressBar;
-
+    private JButton selectedItem;
+    private JOptionPaneMultiple dialogBox;
     private UserTest.Test test;
     private UserAccount user;
     private TestSession session;
-    private DatabaseManager database;
 
-    private JButton selectedItem;
-    private JOptionPaneMultiple dialogBox;
-
+    // constructor
     public UserTakingTestForm() {
         dialogBox = new JOptionPaneMultiple(retrieveTestNames());
         session = new TestSession();
@@ -65,13 +65,12 @@ public class UserTakingTestForm {
             System.exit(-1);
         }
 
-        setup(1);
-        //finishButton.setText(""+session.getSessionID());
-
         rootPanel.setPreferredSize(new Dimension(500,350));
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
         itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
         disableFinishButton();
+
+
         itemAButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -100,6 +99,16 @@ public class UserTakingTestForm {
             }
         });
 
+        /*this.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                System.out.println("Closed");
+                e.getWindow().dispose();
+            }
+        });*/
+
         finishButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,14 +121,17 @@ public class UserTakingTestForm {
                         if (selectedItem == itemAButton) {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), 1);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), -1);
+                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
                         else if (selectedItem == itemBButton) {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), -1);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), 1);
+                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
                         else {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), 0);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), 0);
+                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
 
                         test.incrementTurn();
@@ -198,31 +210,24 @@ public class UserTakingTestForm {
     }
 
     /**
-     * setup
-     * set the test and test session up for a given user
-     * @param userID
-     */
-    private void setup(int userID) {
-
-        session = new TestSession(test.getTestID(), user.getUserID(), true);
-
-
-        //session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
-        session.setSessionID(3);
-        //database.setIsActive(session.getSessionID(), user.getUserID(), test.getTestID());
-        return;
-    }
-
-    /**
      * finishTest
      * change button to indicate to user that the test is finished
      * and call test.writeResults to record results in the database
      */
     private void finishTest() {
-        // write results to database iteratively
+        //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
         finishButton.setText("<html>Test is complete.<br>Please close this window to finish.</html>");
-
-        test.writeResults();
+        if (!test.writeResults()){// || test.getResults().size() == 0){
+            JOptionPane.showMessageDialog(rootPanel, "Unable to record results. Please try again.");
+            System.exit(-1);
+        }
+        else {
+            JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
+            session.setIsActive(true);
+            DAOFactory.getTestSessionDAO().setIsActive(session);
+        }
+        JOptionPane.showMessageDialog(rootPanel, "Test will now exit.");
+        System.exit(0);
     }
 
     /**

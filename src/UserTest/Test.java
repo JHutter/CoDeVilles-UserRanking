@@ -3,8 +3,9 @@ package UserTest;
 import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
 import DaoClasses.DAOFactory;
-import SharedFunctions.DatabaseManager;
+import DaoClasses.TestResultDAO;
 
+import javax.swing.*;
 import java.util.*;
 
 /**
@@ -100,7 +101,6 @@ public class Test extends ContainerClasses.Test{
      * @return list of TestItems
      */
     public ArrayList<TestItem> getItems() {
-        //return database.getTestItems(testID);
         return items;
     }
 
@@ -120,7 +120,6 @@ public class Test extends ContainerClasses.Test{
         itemTotal = items.size();
         pairs = generateItemPairs(items);
         turnTotal = pairs.size();
-        //return database.getTestItems(testID);
         return;
     }
 
@@ -208,21 +207,33 @@ public class Test extends ContainerClasses.Test{
      * @param newItemID, second itemID, which newQuestionNumber was matched against
      * @param newSessionID, the ID of the test session
      * @param newResult, the result of the matchup
+     * @return success
      */
-    public void recordResult(int newQuestionNumber, int newItemID, int newSessionID, int newResult) {
+    public Boolean recordResult(int newQuestionNumber, int newItemID, int newSessionID, int newResult) {
+        int oldResultCount = getResults().size();
         results.add(new TestResult(newQuestionNumber, newItemID, newSessionID, newResult));
+        int newResultCount = getResults().size();
+
+        if (oldResultCount == newResultCount){
+            return false;
+        }
+        else { return true;}
 
     }
 
     /**
      * writeResults
      * write the list of TestResults to the database after the test
+     * @return success
      */
-    public void writeResults() {
-        //database = new DatabaseManager();
+    public Boolean writeResults() {
+        //TestResultDAO resultsManager = DAOFactory.getTestResultDAO();
         for (TestResult result : results) {
-            //database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
+            if (!DAOFactory.getTestResultDAO().insertResult(result)){
+                return false;
+            }
         }
+        return true;
     }
 
     /**
