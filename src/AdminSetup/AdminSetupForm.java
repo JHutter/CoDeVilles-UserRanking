@@ -10,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.lang.String;
 
@@ -40,6 +41,7 @@ import java.lang.String;
  * - Use DAO to get session data
  * 05/28/2016
  * - Delete getSessions method and update ckeckTakenTest to use select count(*) statement
+ * - Add parameter boolean isNew in constructor. Connect DB and get data only in case of test set modification
  */
 
 public class AdminSetupForm {
@@ -52,31 +54,36 @@ public class AdminSetupForm {
     private JButton cancelButton;
     private JLabel takenLabel;
     private ArrayList<TestItem> testItems;
-    //private ArrayList<TestSession> testSessions;
     private DefaultListModel listModel = new DefaultListModel();
     private TestItem tItem;
     private int testID;
-
+    private static JFrame frame;
     /**
      *  Constructor
+     *  @param num testID
+     *  @param isNew define new test set or modify existing test
      */
-    public AdminSetupForm(int num){
-        JOptionPane.showMessageDialog(rootPanel, "test id:"+ num);
-        //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
+    public AdminSetupForm(JFrame frame, int num, boolean isNew){
+        JOptionPane.showMessageDialog(rootPanel, "test id:"+ num + "Is new?:" + isNew);
+        this.frame = frame;
         rootPanel.setPreferredSize(new Dimension(500,350));     // set size of window
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
-        //testSessions = new ArrayList<>();               //declare arraylist and add items to the arraylist
+        testID=num;
 
-        testID=num;     //TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
-
-        //getSessions();
-        getItems();
+        if (!isNew == true){    // if modify exsist test set
+        getItems();                 // Connect and get data from Database
         showItemList();
         ckeckTakenTest();
         checkItemNumber();
         checkListSelected();
+        } else{                   // if define new test set
+        showItemList();
+            checkItemNumber();//set list model at Jlis//
+            // checkItemNumber();
+        }
 
+        //define action listeners
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -159,6 +166,7 @@ public class AdminSetupForm {
                     listModel.addElement(itemTextField.getText());      //the item is added to the list
                     itemTextField.setText("");
                     itemTextField.requestFocus();
+                    checkItemNumber();
                 }
             } else {
                 JOptionPane.showMessageDialog(rootPanel, "The item is already exist. Please enter a new item.");
@@ -179,6 +187,7 @@ public class AdminSetupForm {
                 JOptionPane.showMessageDialog(rootPanel, "Failed to delete user accounts from database.");
             }else{
                 listModel.remove(itemList.getSelectedIndex());      //the item is removed from the list
+                checkItemNumber();
             }
         }
     }
@@ -187,7 +196,9 @@ public class AdminSetupForm {
      * Finish button shows message and close GUI
      */
     public void finishItem(){
-        System.exit(0);
+        //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+        //rootPanel.setVisible(false);
+        frame.dispose();
     }
 
     /**
@@ -210,9 +221,10 @@ public class AdminSetupForm {
               cancelButton.setEnabled(false);
               itemTextField.setEditable(false);
               itemList.setEnabled(false);
+              takenLabel.setVisible(true);
           }
           else{
-              takenLabel.setVisible(false);
+              //takenLabel.setVisible(false);
           }
         //JOptionPane.showMessageDialog(rootPanel,"testID:"+testID +"sessions:"+count);
     }
@@ -222,8 +234,10 @@ public class AdminSetupForm {
     *  Check the number of item. If there are less than two items , finish button should be disabled
     */
     public void  checkItemNumber(){
-        if(testItems.size()<2){
+        if(listModel.getSize()<2){
             finishButton.setEnabled(false);
+        }else{
+            finishButton.setEnabled(true);
         }
     }
 
@@ -289,4 +303,6 @@ public class AdminSetupForm {
     public JPanel getRootPanel(){
         return rootPanel;
     }
+
+
 }

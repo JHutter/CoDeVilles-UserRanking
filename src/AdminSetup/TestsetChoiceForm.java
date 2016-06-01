@@ -77,8 +77,8 @@ public class TestsetChoiceForm {
      */
     public static void createAndShowGui1(int tID){
         JFrame frame = new JFrame("Admin Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new AdminSetupForm(tID).getRootPanel());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(new AdminSetupForm(frame, tID, false).getRootPanel());
         frame.pack();
         frame.setVisible(true);
     }
@@ -88,8 +88,8 @@ public class TestsetChoiceForm {
      */
     public static void createAndShowGui2(){
         JFrame frame = new JFrame("Admin Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new NewsetTitleForm().getRootPanel());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(new NewsetTitleForm(frame).getRootPanel());
         frame.pack();
         frame.setVisible(true);
     }

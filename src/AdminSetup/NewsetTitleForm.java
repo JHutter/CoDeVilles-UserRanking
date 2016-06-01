@@ -26,11 +26,13 @@ public class NewsetTitleForm {
     private JTextField nameTextField;
     private JButton nextButton;
     private String test;
+    private JFrame nFrame;
     private int id;
 
     //Constructor
-    public NewsetTitleForm() {
+    public NewsetTitleForm(JFrame pFrame) {
         rootPanel2.setPreferredSize(new Dimension(500, 350));
+        nFrame = pFrame;
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,10 +51,11 @@ public class NewsetTitleForm {
      */
     public void createAndShowGui1() {
         JFrame frame = new JFrame("Admin Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new AdminSetupForm(id).getRootPanel());
+        //frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE );
+        frame.getContentPane().add(new AdminSetupForm(frame, id, true).getRootPanel());
         frame.pack();
         frame.setVisible(true);
+        nFrame.dispose();
     }
 
     /**
