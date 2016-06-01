@@ -2,6 +2,7 @@ package UserTest;
 
 import ContainerClasses.TestItem;
 import ContainerClasses.TestResult;
+import DaoClasses.DAOFactory;
 import SharedFunctions.DatabaseManager;
 
 import java.util.*;
@@ -28,7 +29,6 @@ public class Test extends ContainerClasses.Test{
     private float progress;
     private ArrayList<TestItem> items;
     private ArrayList<ItemPair> pairs;
-    private DatabaseManager database;
     private ArrayList<TestResult> results;
     private ArrayList<TestItem> recentItems;
 
@@ -43,14 +43,13 @@ public class Test extends ContainerClasses.Test{
         currentTurn = 0;
         progress = 0;
         setTestID(testID);
-        items = new ArrayList<TestItem>();
-        DatabaseManager database = new DatabaseManager();
-        //setDBItems(database.getTestItems(testID));
-        setBackupItems();
-        if (itemTotal == 0) {
+        items = DAOFactory.getTestItemDAO().getTestItems(testID);
+        if (items.size() == 0){
             setBackupItems();
         }
-
+        else {
+            setDBItems(items);
+        }
         results = new ArrayList<>();
     }
 
@@ -61,14 +60,16 @@ public class Test extends ContainerClasses.Test{
      */
     public Test(int testID, String testName) {
         currentTurn = 0;
+        progress = 0;
         setTestID(testID);
-        items = new ArrayList<TestItem>();
-        DatabaseManager database = new DatabaseManager();
-        setDBItems(database.getTestItems(testID));
-        if (itemTotal == 0) {
+        setTestName(testName);
+        items = DAOFactory.getTestItemDAO().getTestItems(testID);
+        if (items.size() == 0){
             setBackupItems();
         }
-
+        else {
+            setDBItems(items);
+        }
         results = new ArrayList<>();
     }
 
@@ -218,7 +219,7 @@ public class Test extends ContainerClasses.Test{
      * write the list of TestResults to the database after the test
      */
     public void writeResults() {
-        database = new DatabaseManager();
+        //database = new DatabaseManager();
         for (TestResult result : results) {
             //database.insertResult(result.getQuestionNumber(), result.getItemID(), result.getSessionID(), result.getResult());
         }

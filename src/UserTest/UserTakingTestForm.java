@@ -2,12 +2,14 @@ package UserTest;
 
 import ContainerClasses.TestSession;
 import ContainerClasses.UserAccount;
+import DaoClasses.DAOFactory;
 import SharedFunctions.DatabaseManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Description: Form for user taking test story
@@ -38,7 +40,7 @@ public class UserTakingTestForm {
     private JButton finishButton;
     private JProgressBar progressBar;
 
-    private Test test;
+    private UserTest.Test test;
     private UserAccount user;
     private TestSession session;
     private DatabaseManager database;
@@ -47,13 +49,23 @@ public class UserTakingTestForm {
     private JOptionPaneMultiple dialogBox;
 
     public UserTakingTestForm() {
-        dialogBox = new JOptionPaneMultiple();
-        String email = dialogBox.getEmail();
-        String password = dialogBox.getPassword();
-        int userID = new DatabaseManager().getUserID(email, password);
+        dialogBox = new JOptionPaneMultiple(retrieveTestNames());
+        session = new TestSession();
         setupProgressBar();
+        if (!signinUser()){
+            JOptionPane.showMessageDialog(rootPanel, "Unable to sign in. Please try again.");
+            System.exit(-1);
+        }
+        if (!setupTest()){
+            JOptionPane.showMessageDialog(rootPanel, "Unable to load test. Please try again later.");
+            System.exit(-1);
+        }
+        if (!setupSession()){
+            JOptionPane.showMessageDialog(rootPanel, "Unable to start session. Please try again later.");
+            System.exit(-1);
+        }
 
-        setup(userID);
+        setup(1);
         //finishButton.setText(""+session.getSessionID());
 
         rootPanel.setPreferredSize(new Dimension(500,350));
@@ -191,12 +203,9 @@ public class UserTakingTestForm {
      * @param userID
      */
     private void setup(int userID) {
-        test = new Test(1);
-        user = new UserAccount();
-        user.setUserID(userID);
+
         session = new TestSession(test.getTestID(), user.getUserID(), true);
-        database = new DatabaseManager();
-        //database.insertSession(user.getUserID(), test.getTestID());
+
 
         //session.setSessionID(database.getSessionID(user.getUserID(), test.getTestID()));
         session.setSessionID(3);
@@ -212,6 +221,7 @@ public class UserTakingTestForm {
     private void finishTest() {
         // write results to database iteratively
         finishButton.setText("<html>Test is complete.<br>Please close this window to finish.</html>");
+
         test.writeResults();
     }
 
@@ -255,6 +265,61 @@ public class UserTakingTestForm {
         progressBar.setIndeterminate(false);
         progressBar.setStringPainted(true);
         updateProgressBar(0);
+    }
+
+    /**
+     * signinUser
+     * grabs user and password from dialog box, checks DB for matching user
+     * @return Boolean for test success
+     */
+    private Boolean signinUser(){
+        String email = dialogBox.getEmail();
+        String password = dialogBox.getPassword();
+        int userID = DAOFactory.getUserAccountDAO().getUserID(email, password);
+        if (userID < 1){
+            return false;
+        }
+        user = new UserAccount(userID, email, "", password);
+        return true;
+    }
+
+    /**
+     * retrieveTestNames
+     * @return testNames arrayList of Strings
+     */
+    private ArrayList<ContainerClasses.Test> retrieveTestNames(){
+        ArrayList<ContainerClasses.Test> tests = DAOFactory.getTestDAO().returnAllTests();
+        return tests;
+    }
+
+    /**
+     * setupTest
+     * grab test name and ID from dialog box, assign them to test
+     * @return Boolean for setup success
+     */
+    private Boolean setupTest(){
+        String testName = dialogBox.getTestName();
+        int testID = dialogBox.getTestID();
+        if (testID < 1){
+            return false;
+        }
+        test = new Test(testID, testName);
+        return true;
+    }
+
+    /**
+     * setupSession
+     * use userID and testID to set up the session
+     * @return Boolean for action success
+     */
+    private Boolean setupSession(){
+        session = new TestSession(test.getTestID(), user.getUserID(), false);
+        DAOFactory.getTestSessionDAO().insertSession(session.getUserID(), session.getTestID());
+        session.setSessionID(DAOFactory.getTestSessionDAO().getSessionID(session.getUserID(), session.getTestID()));
+        if (session.getSessionID() < 1) {
+            return false;
+        }
+        return true;
     }
 
 
