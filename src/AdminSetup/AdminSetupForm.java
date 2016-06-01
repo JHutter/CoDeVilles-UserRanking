@@ -1,7 +1,6 @@
 package AdminSetup;
 
 import ContainerClasses.TestItem;
-import ContainerClasses.TestSession;
 import DaoClasses.*;
 
 import javax.swing.*;
@@ -10,7 +9,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.lang.String;
 
@@ -42,6 +40,8 @@ import java.lang.String;
  * 05/28/2016
  * - Delete getSessions method and update ckeckTakenTest to use select count(*) statement
  * - Add parameter boolean isNew in constructor. Connect DB and get data only in case of test set modification
+ * 05/31/2016
+ * - Add Jframe parameter in constructor and modify finishItem method to finish button close only this GUI screen
  */
 
 public class AdminSetupForm {
@@ -53,35 +53,34 @@ public class AdminSetupForm {
     private JButton finishButton;
     private JButton cancelButton;
     private JLabel takenLabel;
+    private JFrame frame;
+
     private ArrayList<TestItem> testItems;
     private DefaultListModel listModel = new DefaultListModel();
     private TestItem tItem;
     private int testID;
-    private static JFrame frame;
+
+
     /**
      *  Constructor
      *  @param num testID
      *  @param isNew define new test set or modify existing test
      */
-    public AdminSetupForm(JFrame frame, int num, boolean isNew){
-        JOptionPane.showMessageDialog(rootPanel, "test id:"+ num + "Is new?:" + isNew);
-        this.frame = frame;
+    public AdminSetupForm(JFrame pFrame, int num, boolean isNew){
+        frame = pFrame;
         rootPanel.setPreferredSize(new Dimension(500,350));     // set size of window
 
         testItems = new ArrayList<>();               //declare arraylist and add items to the arraylist
         testID=num;
 
-        if (!isNew == true){    // if modify exsist test set
-        getItems();                 // Connect and get data from Database
-        showItemList();
-        ckeckTakenTest();
-        checkItemNumber();
-        checkListSelected();
-        } else{                   // if define new test set
-        showItemList();
-            checkItemNumber();//set list model at Jlis//
-            // checkItemNumber();
+        if (!isNew == true) {    // only if modify exsist test set, Connect and get data from Database
+            getItems();
+            ckeckTakenTest();
+            checkListSelected();
         }
+
+        showItemList();
+        checkItemNumber();
 
         //define action listeners
         addButton.addActionListener(new ActionListener() {
@@ -123,23 +122,8 @@ public class AdminSetupForm {
      */
     public void getItems(){
         TestItemDAO tItemDAO = DAOFactory.getTestItemDAO();
-//        if(!tItemDAO.readAllTestItems(testItems)){
-//        //if(!databaseManager.readAllTestItems(testItems)){
-//            JOptionPane.showMessageDialog(rootPanel, "Fail to read test items");
-//        }
         testItems =tItemDAO.getTestItems(testID);
     }
-
-    /**
-     * Get session list array from TestSessionDAO
-     */
-    //will be updated to use DAO
-/*    public void getSessions(){
-        TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
-        if(!tSessionDAO.readAllTestSessions(testSessions)){
-            JOptionPane.showMessageDialog(rootPanel, "Fail to read test sessions");
-        }
-    }*/
 
     /**
      * Show exist items on the list from DB
@@ -149,6 +133,85 @@ public class AdminSetupForm {
               listModel.addElement(tItem.getItemText());
        }
         itemList.setModel(listModel);
+    }
+
+
+
+    /**
+     * Check weather test is taken or not. After any user takes test, item can not be changed
+     */
+    public void ckeckTakenTest(){
+        TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
+        int count = tSessionDAO.countSession(testID);
+          if (count > 0) {        // if this test set taken test more than once
+              addButton.setEnabled(false);
+              deleteButton.setEnabled(false);
+              cancelButton.setEnabled(false);
+              itemTextField.setEditable(false);
+              itemList.setEnabled(false);
+              takenLabel.setVisible(true);
+          }
+    }
+
+   /**
+    *  Check the number of item. If there are less than two items , finish button should be disabled
+    */
+    public void  checkItemNumber(){
+        if(listModel.getSize()<2){
+            finishButton.setEnabled(false);
+        }else{
+            finishButton.setEnabled(true);
+        }
+    }
+
+    private void checkListSelected() {
+        if (itemList.getSelectedIndex() == -1) {
+            deleteButton.setEnabled(false);
+        } else {
+            deleteButton.setEnabled(true);
+        }
+    }
+
+    /**
+     *  Check input item is not duplicated.
+     *  @return  boolean if it is duplicated return true
+     */
+    private boolean isDuplicate() {
+        if (listModel.contains(itemTextField.getText())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     *  Check text length
+     *  @return  boolean if text length is within 1-50 return true
+     */
+    private boolean isValidLength() {
+        if (itemTextField.getText().length() > 50) {        //max length of text is 50
+            JOptionPane.showMessageDialog(rootPanel, "Please input item text within 50 characters.");
+            itemTextField.requestFocus();
+            return false;
+        } else if(itemTextField.getText().length() == 0) {        //check input is valid
+            JOptionPane.showMessageDialog(rootPanel, "Please input item to add.");
+            itemTextField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *  Check list is selected to delete
+     *  @return  boolean if list is selected return true
+     */
+    private boolean isListSelected() {
+        if (itemList.getSelectedIndex() == -1)      //no item is selected in the list
+        {
+            JOptionPane.showMessageDialog(rootPanel, "Please select item to delete.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -162,13 +225,13 @@ public class AdminSetupForm {
                 if (!tItemDAO.insertTestItem(tItem)) {
                     JOptionPane.showMessageDialog(rootPanel, "Failed to add item to database.");
                     itemTextField.requestFocus();
-                } else {                                                                       //query is executed query without error
+                } else {                                                   //query is executed query without error
                     listModel.addElement(itemTextField.getText());      //the item is added to the list
                     itemTextField.setText("");
                     itemTextField.requestFocus();
                     checkItemNumber();
                 }
-            } else {
+            }else {
                 JOptionPane.showMessageDialog(rootPanel, "The item is already exist. Please enter a new item.");
                 itemTextField.setText("");
                 itemTextField.requestFocus();
@@ -193,11 +256,9 @@ public class AdminSetupForm {
     }
 
     /**
-     * Finish button shows message and close GUI
+     * Finish button close GUI
      */
     public void finishItem(){
-        //frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-        //rootPanel.setVisible(false);
         frame.dispose();
     }
 
@@ -210,99 +271,10 @@ public class AdminSetupForm {
     }
 
     /**
-     * Check weather test is taken or not. After any user takes test, item can not be changed
-     */
-    public void ckeckTakenTest(){
-        TestSessionDAO tSessionDAO = DAOFactory.getTestSessionDAO();
-        int count = tSessionDAO.countSession(testID);
-          if (count > 0) {        // please change here to "if (testSessions.size() > 0) " to test ckeckTakenTest method
-              addButton.setEnabled(false);
-              deleteButton.setEnabled(false);
-              cancelButton.setEnabled(false);
-              itemTextField.setEditable(false);
-              itemList.setEnabled(false);
-              takenLabel.setVisible(true);
-          }
-          else{
-              //takenLabel.setVisible(false);
-          }
-        //JOptionPane.showMessageDialog(rootPanel,"testID:"+testID +"sessions:"+count);
-    }
-
-
-   /**
-    *  Check the number of item. If there are less than two items , finish button should be disabled
-    */
-    public void  checkItemNumber(){
-        if(listModel.getSize()<2){
-            finishButton.setEnabled(false);
-        }else{
-            finishButton.setEnabled(true);
-        }
-    }
-
-    private void checkListSelected() {
-        if (itemList.getSelectedIndex() == -1) {
-            deleteButton.setEnabled(false);
-        }
-        else {
-
-            deleteButton.setEnabled(true);
-        }
-    }
-
-    /**
-     *  Check input item is not duplicated.
-     *  @return  boolean if it is duplicated return true
-     */
-    private boolean isDuplicate() {
-        if (listModel.contains(itemTextField.getText())) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    /**
-     *  Check text length
-     *  @return  boolean if text length is within 1-50 return true
-     */
-    private boolean isValidLength() {
-        if (itemTextField.getText().length() > 50) {        //max length of text is 50
-            JOptionPane.showMessageDialog(rootPanel, "Please input item text within 50 characters.");
-            itemTextField.requestFocus();
-            return false;
-        }
-        else if(itemTextField.getText().length() == 0) {        //check input is valid
-            JOptionPane.showMessageDialog(rootPanel, "Please input item to add.");
-            itemTextField.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     *  Check list is selected to delete
-     *  @return  boolean if list is selected return true
-     */
-    private boolean isListSelected()
-    {
-        if (itemList.getSelectedIndex() == -1)      //no item is selected in the list
-        {
-            JOptionPane.showMessageDialog(rootPanel, "Please select item to delete.");
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Return root panel to add to main frame
      * @return rootPanel the root panel that holds every elements
      */
     public JPanel getRootPanel(){
         return rootPanel;
     }
-
-
 }

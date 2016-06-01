@@ -19,6 +19,10 @@ import DaoClasses.TestDAO;
  * Modification
  * 05/25/2016
  * - Use DAO to insert new test
+ *
+ * 05/31/2016
+ * - Add Jframe parameter in constructor to close only this GUI screen
+ * - Add isValidLength method to avoid name field is empty
  */
 
 public class NewsetTitleForm {
@@ -36,14 +40,12 @@ public class NewsetTitleForm {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addTestset();
-                javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui1());
+                if (isValidLength()) {      // text field is not empty
+                    addTestset();
+                    javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui1());
+                }
             }
         });
-    }
-
-    public JPanel getRootPanel() {
-        return rootPanel2;
     }
 
     /**
@@ -63,11 +65,24 @@ public class NewsetTitleForm {
      */
     public void addTestset() {
         TestDAO testDAO = DAOFactory.getTestDAO();
-        //if (isValidLength())     //item is valid length
-        //if (!isDuplicate() && isValidLength()) {       //item is not duplicated
         test = nameTextField.getText();
         id = testDAO.insertGetTest(test);
-        //itemTextField.setText("");
-        //itemTextField.requestFocus();
+    }
+
+    /**
+     *  Check text length
+     *  @return  boolean if text field is not empty return true
+     */
+    private boolean isValidLength() {
+        if(nameTextField.getText().length() == 0) {        //check input is valid
+            JOptionPane.showMessageDialog(rootPanel2, "Please input the name of test set.");
+            nameTextField.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    public JPanel getRootPanel() {
+        return rootPanel2;
     }
 }
