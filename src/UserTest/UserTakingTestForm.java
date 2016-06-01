@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created: 2016-05-03
  *
  * @author JHutter
- * @version 2016-05-24
+ * @version 2016-05-31
  *
  * Modifications: updated testtaking logic, finish/next button enabled and disabled,
  * method to write to results
@@ -32,6 +32,9 @@ import java.util.ArrayList;
  *      Insert session fixed
  * 2016.5.31
  *      Added progress bar
+ *      Refactored set process into methods
+ *      Added checks with dialog box + exit for invalid values
+ *      Refactored to use DAO
  */
 public class UserTakingTestForm {
     // fields
@@ -46,6 +49,7 @@ public class UserTakingTestForm {
     private UserTest.Test test;
     private UserAccount user;
     private TestSession session;
+    private float progress = 0;
 
     // constructor
     public UserTakingTestForm() {
@@ -69,7 +73,6 @@ public class UserTakingTestForm {
         itemAButton.setText(test.getPairs().get(0).getItem1().getItemText());
         itemBButton.setText(test.getPairs().get(0).getItem2().getItemText());
         disableFinishButton();
-
 
         itemAButton.addActionListener(new ActionListener() {
             @Override
@@ -121,17 +124,14 @@ public class UserTakingTestForm {
                         if (selectedItem == itemAButton) {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), 1);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), -1);
-                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
                         else if (selectedItem == itemBButton) {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), -1);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), 1);
-                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
                         else {
                             test.recordResult(itemAID, itemBID, session.getSessionID(), 0);
                             test.recordResult(itemBID, itemAID, session.getSessionID(), 0);
-                            //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
                         }
 
                         test.incrementTurn();
@@ -150,7 +150,6 @@ public class UserTakingTestForm {
 
                 }
                 updateProgressBar((int)test.getProgress());
-
                 return;
             }
         });
@@ -215,14 +214,12 @@ public class UserTakingTestForm {
      * and call test.writeResults to record results in the database
      */
     private void finishTest() {
-        //JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
         finishButton.setText("<html>Test is complete.<br>Please close this window to finish.</html>");
         if (!test.writeResults()){// || test.getResults().size() == 0){
             JOptionPane.showMessageDialog(rootPanel, "Unable to record results. Please try again.");
             System.exit(-1);
         }
         else {
-            JOptionPane.showMessageDialog(rootPanel, test.getResults().size());
             session.setIsActive(true);
             DAOFactory.getTestSessionDAO().setIsActive(session);
         }

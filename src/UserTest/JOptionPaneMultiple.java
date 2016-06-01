@@ -6,7 +6,16 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * Created by Jojo on 5/12/2016.
+ * This class extends JOptionPane to grab user info.
+ * CIS 234A Dougherty
+ * Creation Date: 5/12/2016
+ *
+ *  @author JoAnne
+ *  @version 2016.5.31
+ *
+ *  Modifications:
+ * 2016.5.31:
+ *      Added constructor to allow for multiple tests
  */
 public class JOptionPaneMultiple {
     private JTextField emailField = new JTextField(15);
@@ -27,7 +36,6 @@ public class JOptionPaneMultiple {
         myPanel.add(Box.createHorizontalStrut(15)); // a spacer
         myPanel.add(new JLabel("Password:"));
         myPanel.add(passwordField);
-        emailField.setText("email@email.com");
 
         int result = JOptionPane.showConfirmDialog(null, myPanel,
                 "Please log in", JOptionPane.OK_CANCEL_OPTION);
@@ -53,6 +61,7 @@ public class JOptionPaneMultiple {
         bottomPanel.add(Box.createHorizontalStrut(15)); // a spacer
         bottomPanel.add(new JLabel("Password:"));
         bottomPanel.add(passwordField);
+        emailField.setText("email@email.com");
         emailField.setText("email@email.com");
 
         myPanel.add(topPanel, BorderLayout.NORTH);
