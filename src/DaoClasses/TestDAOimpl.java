@@ -11,13 +11,17 @@ import DaoClasses.DatabaseConnection;
  * CIS 234A Dougherty
  * Date created: 5/24/2016.
  *  @author JoAnne and Jinsook Lee
- *  @version 2016.5.25
+ *  @version 2016.5.31
  *
  * Modification
  * 2016.5.25
  *      Added insertGetTest method
  *      Added clause to INSERT_NEW_TEST_SQL
  *      Added constructor
+ *
+ * 2016.5.31
+ *      Added returnAllTests method
+ *
  */
 
 public class TestDAOimpl implements TestDAO {
@@ -88,6 +92,35 @@ public class TestDAOimpl implements TestDAO {
             return 0;
         }
         return id;
+    }
+
+    /**
+     * returnAllTests
+     * Reads all tests from the database and returns them to the user
+     * @return true/false Whether the connection and read failed or succeeded.
+     */
+    public ArrayList<Test> returnAllTests(){
+        ArrayList<Test> tests = new ArrayList<>();
+        try ( //try to create a database connection
+              Connection connection =  databaseConnection.getConnection();
+              PreparedStatement stmt = connection.prepareStatement(GET_ALL_TESTS_SQL);
+              ResultSet rs = stmt.executeQuery()
+        ){
+            while (rs.next()){ //if the connection was successful, read the result set and put into array list
+                tests.add(
+                        new Test(
+                                rs.getInt("TestID"),
+                                rs.getString("TestName")
+                        ));
+            }
+
+        } catch (SQLException e) { //if the connection fails, show error
+            System.err.println("ERROR: " + e.getMessage());
+            e.printStackTrace();
+            return null; //return null due to connection failure
+        }
+
+        return tests; // return the arrayList
     }
 
     public TestDAOimpl(){
