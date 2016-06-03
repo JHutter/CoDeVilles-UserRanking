@@ -17,8 +17,6 @@ import javax.swing.*;
 public class MainAdminSetup {
 
     public static void createAndShowGui(){
-
-
         JFrame frame = new JFrame("Admin Setup");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new TestsetChoiceForm().getRootPanel());
@@ -28,5 +26,7 @@ public class MainAdminSetup {
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui());
     }
+
+
 
 }

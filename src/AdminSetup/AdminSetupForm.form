@@ -84,6 +84,7 @@
           <enabled value="true"/>
           <foreground color="-65536"/>
           <text value="User already took a test. You can’t change items."/>
+          <visible value="false"/>
         </properties>
       </component>
       <hspacer id="3b819">

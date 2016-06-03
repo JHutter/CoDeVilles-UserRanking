@@ -15,10 +15,13 @@ import java.util.ArrayList;
  * Create Date 05/24/2016
  *
  * @author   Jinsook Lee
- * @version  05/25/2016
+ * @version  05/31/2016
  *
  * 05/25/2016
  * - Use DAO to insert new test
+ *
+ * 05/31/2016
+ * - Modify createAndShowGui1, createAndShowGui1 method setDefaultCloseOperation from EXIT_ON_CLOSE to DISPOSE_ON_CLOSE
  */
 public class TestsetChoiceForm {
     private JComboBox choiceCombo;
@@ -28,13 +31,11 @@ public class TestsetChoiceForm {
     private JPanel rootPanel1;
     private int testID;
     private ArrayList<Test> testsArr;
-    //private DatabaseManager databaseManager;
 
     //Constructor
     public TestsetChoiceForm() {
 
         rootPanel1.setPreferredSize(new Dimension(500,350));
-        //databaseManager = new DatabaseManager();
         testsArr = new ArrayList<>();
         getTests();
         fillNameBox();
@@ -45,10 +46,10 @@ public class TestsetChoiceForm {
         nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(modiRadioButton.isSelected()) {
+                if(modiRadioButton.isSelected()) {      //modify existing test set
                     testID=getTestID();
                     javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui1(getTestID()));
-                }else if (newRadioButton.isSelected()){
+                }else if (newRadioButton.isSelected()){     //create new test set
                     javax.swing.SwingUtilities.invokeLater(() -> createAndShowGui2());
                 }
             }
@@ -77,8 +78,8 @@ public class TestsetChoiceForm {
      */
     public static void createAndShowGui1(int tID){
         JFrame frame = new JFrame("Admin Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new AdminSetupForm(tID).getRootPanel());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(new AdminSetupForm(frame, tID, false).getRootPanel());
         frame.pack();
         frame.setVisible(true);
     }
@@ -88,8 +89,8 @@ public class TestsetChoiceForm {
      */
     public static void createAndShowGui2(){
         JFrame frame = new JFrame("Admin Setup");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new NewsetTitleForm().getRootPanel());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.getContentPane().add(new NewsetTitleForm(frame).getRootPanel());
         frame.pack();
         frame.setVisible(true);
     }
@@ -124,5 +125,4 @@ public class TestsetChoiceForm {
     public JPanel getRootPanel(){
         return rootPanel1;
     }
-
 }
