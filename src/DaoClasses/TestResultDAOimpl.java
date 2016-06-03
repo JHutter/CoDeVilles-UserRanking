@@ -11,7 +11,11 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Date created: 5/19/2016.
  *  @author Zack, JoAnne
- *  @version 2016.5.19
+ *  @version 2016.5.31
+ *
+ *  Modifications:
+ *  2016.5.31
+ *      refactored insertResult to take a TestResult param, instead of several ints
  */
 public class TestResultDAOimpl implements TestResultDAO {
     //fields
@@ -58,14 +62,15 @@ public class TestResultDAOimpl implements TestResultDAO {
 
     /**
      * Add test results to database. Returns true/false success status
-     * @param questionNumber int, the ID for the item
-     * @param itemID int, the ID for the matched item
-     * @param sessionID int, the ID for the session
-     * @param result int, the result of the matchup (-1,0,1)
+     * @param result TestResult, the result to write to the DB
      * @return true/false Whether the connection and write failed or succeeded.
      */
     @Override
-    public boolean insertResult(int questionNumber, int itemID, int sessionID, int result) {
+    public boolean insertResult(TestResult result) {
+        int questionNumber = result.getQuestionNumber();
+        int itemID = result.getItemID();
+        int sessionID = result.getSessionID();
+        int resultInt = result.getResult();
         if(databaseConnection.getStatus()) {
             try ( //try t create a database connection
                   Connection connection =  databaseConnection.getConnection();
@@ -74,7 +79,7 @@ public class TestResultDAOimpl implements TestResultDAO {
                 stmt.setInt(1, questionNumber);
                 stmt.setInt(2, itemID);
                 stmt.setInt(3, sessionID);
-                stmt.setInt(4, result);
+                stmt.setInt(4, resultInt);
                 stmt.executeUpdate();
                 return true;
             }
