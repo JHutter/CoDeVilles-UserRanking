@@ -220,7 +220,7 @@ public class UserTakingTestForm {
             System.exit(-1);
         }
         else {
-            session.setIsActive(true);
+            session.setIsActive(false);
             DAOFactory.getTestSessionDAO().setIsActive(session);
         }
         JOptionPane.showMessageDialog(rootPanel, "Test will now exit.");
@@ -315,7 +315,7 @@ public class UserTakingTestForm {
      * @return Boolean for action success
      */
     private Boolean setupSession(){
-        session = new TestSession(test.getTestID(), user.getUserID(), false);
+        session = new TestSession(test.getTestID(), user.getUserID(), true);
         DAOFactory.getTestSessionDAO().insertSession(session.getUserID(), session.getTestID());
         session.setSessionID(DAOFactory.getTestSessionDAO().getSessionID(session.getUserID(), session.getTestID()));
         if (session.getSessionID() < 1) {
