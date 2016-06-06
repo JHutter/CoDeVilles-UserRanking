@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * Date created: 05/24/2016
  *  @author JoAnne Hutter, Zack Salzwedel, Jinsook Lee
- *  @version 05/28/2016
+ *  @version 06/06/2016
  *
  *  2016.5.27
  *      added function to get inactive test sessions
@@ -25,6 +25,9 @@ import java.util.ArrayList;
  * 2016.5.31
  *      changed setIsActive to have a TestSession obj as parameter instead of individual ints
  *
+ * 2016.6.6
+ *      changed setIsActive to change session IsActive based on session.getActive()
+ *
  */
 public class TestSessionDAOimpl implements TestSessionDAO {
     //fields
@@ -34,7 +37,7 @@ public class TestSessionDAOimpl implements TestSessionDAO {
     private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS";
     private static final String GET_INACTIVE_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS " +
                                                                  "WHERE isActive = 0";
-    private static final String SET_IS_ACTIVE_SQL = "UPDATE TESTSESSIONS SET isActive = 1 WHERE SessionID = ?" +
+    private static final String SET_IS_ACTIVE_SQL = "UPDATE TESTSESSIONS SET isActive = ? WHERE SessionID = ?" +
             "and UserID = ? and  TestID = ?";
     private static final String COUNT_SESSIONS_ID_SQL = "SELECT COUNT(*) AS total FROM TESTSESSIONS WHERE TestID = ?";
 
@@ -164,20 +167,22 @@ public class TestSessionDAOimpl implements TestSessionDAO {
     }
 
     /**
-     * Set isActive to true when a test is being taken by the user
+     * Set isActive to match session.getIsActive
      * @param session TestSession, the session to mark active
      */
     public void setIsActive(TestSession session) {
         int sessionID = session.getSessionID();
         int userID = session.getUserID();
         int testID = session.getTestID();
+        int active = (session.getIsActive()) ? 1 : 0;
         try ( //try t create a database connection
               Connection connection =  databaseConnection.getConnection();
               PreparedStatement stmt = connection.prepareStatement(SET_IS_ACTIVE_SQL);
         ){
-            stmt.setInt(1, sessionID);
-            stmt.setInt(2, userID);
-            stmt.setInt(3, testID);
+            stmt.setInt(1, active);
+            stmt.setInt(2, sessionID);
+            stmt.setInt(3, userID);
+            stmt.setInt(4, testID);
             stmt.executeUpdate();
             return;
         }
