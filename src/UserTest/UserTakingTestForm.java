@@ -120,26 +120,47 @@ public class UserTakingTestForm {
                     if (test.getCurrentTurn() < test.getTotalTurn()-1) {
                         int itemAID = test.getItemByText(itemAButton.getText()).getItemID();
                         int itemBID = test.getItemByText(itemBButton.getText()).getItemID();
+                        int questionNumber = test.getCurrentTurn();
+                        int sessionID = session.getSessionID();
 
                         if (selectedItem == itemAButton) {
-                            test.recordResult(itemAID, itemBID, session.getSessionID(), 1);
-                            test.recordResult(itemBID, itemAID, session.getSessionID(), -1);
+                            test.recordResult(questionNumber, itemBID, sessionID, -1);
+                            test.recordResult(questionNumber, itemAID, sessionID, 1);
                         }
                         else if (selectedItem == itemBButton) {
-                            test.recordResult(itemAID, itemBID, session.getSessionID(), -1);
-                            test.recordResult(itemBID, itemAID, session.getSessionID(), 1);
+                            test.recordResult(questionNumber, itemBID, sessionID, 1);
+                            test.recordResult(questionNumber, itemAID, sessionID, -1);
                         }
                         else {
-                            test.recordResult(itemAID, itemBID, session.getSessionID(), 0);
-                            test.recordResult(itemBID, itemAID, session.getSessionID(), 0);
+                            test.recordResult(questionNumber, itemBID, sessionID, 0);
+                            test.recordResult(questionNumber, itemAID, sessionID, 0);
                         }
 
                         test.incrementTurn();
                         selectedItem = null;
-                        setNewItemPairs(test.getCurrentTurn());
                         disableFinishButton();
+                        setNewItemPairs(test.getCurrentTurn());
                     }
                     else {
+                        // code smell... refactor TODO
+                        int itemAID = test.getItemByText(itemAButton.getText()).getItemID();
+                        int itemBID = test.getItemByText(itemBButton.getText()).getItemID();
+                        int questionNumber = test.getCurrentTurn();
+                        int sessionID = session.getSessionID();
+
+                        if (selectedItem == itemAButton) {
+                            test.recordResult(questionNumber, itemBID, sessionID, -1);
+                            test.recordResult(questionNumber, itemAID, sessionID, 1);
+                        }
+                        else if (selectedItem == itemBButton) {
+                            test.recordResult(questionNumber, itemBID, sessionID, 1);
+                            test.recordResult(questionNumber, itemAID, sessionID, -1);
+                        }
+                        else {
+                            test.recordResult(questionNumber, itemBID, sessionID, 0);
+                            test.recordResult(questionNumber, itemAID, sessionID, 0);
+                        }
+
                         itemAButton.setVisible(false);
                         itemBButton.setVisible(false);
                         noItemButton.setVisible(false);
