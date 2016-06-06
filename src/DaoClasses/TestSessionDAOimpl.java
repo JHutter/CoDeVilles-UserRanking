@@ -27,13 +27,14 @@ import java.util.ArrayList;
  *
  * 2016.6.6
  *      changed setIsActive to change session IsActive based on session.getActive()
+ *      changed insertNewSession
  *
  */
 public class TestSessionDAOimpl implements TestSessionDAO {
     //fields
     DatabaseConnection databaseConnection;
     private static final String GET_SESSION_SQL = "SELECT SessionID FROM TESTSESSIONS WHERE UserID = ? and TestID = ?";
-    private static final String INSERT_NEW_SESSION_SQL = "INSERT INTO TESTSESSIONS (UserID, TestID, isActive) values (?, ?, 0)";
+    private static final String INSERT_NEW_SESSION_SQL = "INSERT INTO TESTSESSIONS (UserID, TestID, isActive) values (?, ?, 1)";
     private static final String GET_ALL_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS";
     private static final String GET_INACTIVE_TEST_SESSIONS_SQL = "SELECT SessionID, UserID, TestID, isActive FROM TESTSESSIONS " +
                                                                  "WHERE isActive = 0";
