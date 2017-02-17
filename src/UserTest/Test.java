@@ -14,7 +14,7 @@ import java.util.*;
  * CIS 234A Dougherty
  * Creation Date: 4/26/2016
  *
- *  @author JoAnne
+ *  @author JHutter
  *  @version 2016.5.31
  *
  *  Modifications:
