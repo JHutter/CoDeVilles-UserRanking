@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Creation Date: 5/12/2016
  *
- *  @author JoAnne
+ *  @author JHutter
  *  @version 2016.5.31
  *
  *  Modifications:
