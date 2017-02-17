@@ -5,7 +5,7 @@ package ContainerClasses;
  * CIS 234A Dougherty
  * Creation Date: 4/22/2016.
  *
- *  @author Zack, JoAnne
+ *  @author Zack, JHutter
  *  @version 2016.5.24
  *
  *  Modifications:
