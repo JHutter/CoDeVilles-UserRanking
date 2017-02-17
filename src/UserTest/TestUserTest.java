@@ -6,7 +6,7 @@ import javax.swing.*;
 /**
  * Description: Class to manage GUI for user taking test
  *
- * Programmer: JoAnne Hutter
+ * Programmer: JHutter
  * Date: 2016-04-19
  *
  * @author JHutter
