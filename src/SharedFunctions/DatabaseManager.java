@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * CIS 234A Dougherty
  * Creation Date: 4/22/2016.
  *
- *  @author Zack and Jinsook and JoAnne
+ *  @author Zack and Jinsook and JHutter
  *  @version 2016.5.16
  *
  *  2016.4.29:
