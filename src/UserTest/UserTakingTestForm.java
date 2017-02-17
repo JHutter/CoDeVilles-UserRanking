@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Description: Form for user taking test story
  *
- * Programmer: JoAnne Hutter
+ * Programmer: JHutter
  * Created: 2016-05-03
  *
  * @author JHutter
